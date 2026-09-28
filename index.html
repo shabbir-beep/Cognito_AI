@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign AI Workbench — MRPL SIH26117</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Custom scrollbar & crisp UI accents */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+    .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .pulse-glow { animation: pulseGlow 2s infinite alternate; }
+    @keyframes pulseGlow { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4); } 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); } }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-md">
+    <div class="flex items-center gap-4">
+      <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-xl">
+        ⚡
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-lg font-bold tracking-tight text-white">SOVEREIGN AI WORKBENCH</h1>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300 border border-emerald-700/50">Project SIH26117</span>
+        </div>
+        <p class="text-xs text-slate-400">Mangalore Refinery and Petrochemicals Limited (MRPL) • Air-Gapped Industrial AI Assistant</p>
+      </div>
+    </div>
+
+    <!-- SECURITY STATUS & CONTROLS -->
+    <div class="flex items-center gap-4">
+      <!-- AIR GAP BADGE -->
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-xs font-mono text-emerald-300 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-bold">AIR-GAP ACTIVE</span>
+        <span class="text-slate-400">|</span>
+        <span>Outbound: <strong class="text-white">0 Packets</strong></span>
+      </div>
+
+      <!-- AUTONOMOUS / GATE TOGGLE -->
+      <div class="flex items-center gap-2 bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs">
+        <span class="text-slate-400 pl-2">Permission Gate:</span>
+        <button id="toggleGateBtn" onclick="toggleGateMode()" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium hover:bg-amber-500/30 transition">
+          🛡️ Interactive Modal
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- DASHBOARD METRICS BAR -->
+  <section class="bg-slate-900/60 border-b border-slate-800 px-6 py-3 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- GPU / VRAM METRIC -->
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 flex justify-between items-center">
+      <div>
+        <div class="text-xs text-slate-400 uppercase font-semibold">NVIDIA RTX 4070 (Detected)</div>
+        <div class="text-sm font-mono font-bold text-emerald-400 mt-0.5">VRAM: <span id="vramUsage">4.2</span> / 12.0 GB</div>
+      </div>
+      <div class="w-12 h-12 relative flex items-center justify-center">
+        <svg class="w-12 h-12 transform -rotate-90">
+          <circle cx="24" cy="24" r="18" stroke="#1e293b" stroke-width="4" fill="none"/>
+          <circle id="vramCircle" cx="24" cy="24" r="18" stroke="#10b981" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="73" fill="none" class="transition-all duration-500"/>
+        </svg>
+        <span class="absolute text-[10px] font-mono text-slate-300">35%</span>
+      </div>
+    </div>
+
+    <!-- SYSTEM RAM METRIC -->
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 flex justify-between items-center">
+      <div>
+        <div class="text-xs text-slate-400 uppercase font-semibold">System Memory</div>
+        <div class="text-sm font-mono font-bold text-cyan-400 mt-0.5">RAM: 14.8 / 32.0 GB</div>
+      </div>
+      <div class="w-12 h-12 relative flex items-center justify-center">
+        <svg class="w-12 h-12 transform -rotate-90">
+          <circle cx="24" cy="24" r="18" stroke="#1e293b" stroke-width="4" fill="none"/>
+          <circle cx="24" cy="24" r="18" stroke="#06b6d4" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="60" fill="none"/>
+        </svg>
+        <span class="absolute text-[10px] font-mono text-slate-300">46%</span>
+      </div>
+    </div>
+
+    <!-- MODEL ROUTER STATUS -->
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+      <div class="text-xs text-slate-400 uppercase font-semibold">Active Model Pool</div>
+      <div class="text-xs font-mono text-slate-200 mt-1 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="activeModelLabel" class="font-bold text-amber-300">Qwen2.5-Coder:7B</span>
+        <span class="text-slate-500">(Auto-Routed)</span>
+      </div>
+    </div>
+
+    <!-- LOCAL RAG STATUS -->
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3">
+      <div class="text-xs text-slate-400 uppercase font-semibold">Air-Gapped Knowledge Base</div>
+      <div class="text-xs font-mono text-emerald-300 mt-1 flex items-center justify-between">
+        <span>📚 MRPL Refinery SOPs</span>
+        <span class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300 border border-slate-700">ChromaDB Local</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN THREE-COLUMN WORKSPACE -->
+  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 max-w-[1920px] mx-auto w-full">
+    
+    <!-- LEFT PANEL: TASK INPUT, PRESETS & FILE UPLOAD (3 COLS) -->
+    <section class="lg:col-span-3 flex flex-col gap-4">
+      
+      <!-- TASK PRESETS CARD -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2 mb-3">
+          <span>🎯</span> Industrial Scenario Presets
+        </h2>
+        <div class="space-y-2">
+          <button onclick="loadPreset(1)" class="w-full text-left p-2.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition text-xs flex flex-col gap-1 group">
+            <div class="flex items-center justify-between font-medium text-slate-200 group-hover:text-emerald-300">
+              <span>📄 Inspection Approval Note</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-900/60 text-blue-300">Doc Task</span>
+            </div>
+            <p class="text-slate-400 text-[11px] line-clamp-2">Audit hydrocracker pressure log & draft formal Word (.docx) approval note for plant manager.</p>
+          </button>
+
+          <button onclick="loadPreset(2)" class="w-full text-left p-2.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition text-xs flex flex-col gap-1 group">
+            <div class="flex items-center justify-between font-medium text-slate-200 group-hover:text-purple-300">
+              <span>💻 PLC Automation Logic</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-900/60 text-purple-300">Coding Task</span>
+            </div>
+            <p class="text-slate-400 text-[11px] line-clamp-2">Generate Python control script to monitor crude tank telemetry and alert on thermal variance.</p>
+          </button>
+
+          <button onclick="loadPreset(3)" class="w-full text-left p-2.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition text-xs flex flex-col gap-1 group">
+            <div class="flex items-center justify-between font-medium text-slate-200 group-hover:text-amber-300">
+              <span>📐 P&ID Drawing OCR & Inspection</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-900/60 text-amber-300">Vision Task</span>
+            </div>
+            <p class="text-slate-400 text-[11px] line-clamp-2">Parse scanned piping diagram (P&ID-402) for relief valve specifications against SOP-2024.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- PROMPT & MULTIMODAL INPUT CARD -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex-1 flex flex-col">
+        <h2 class="text-sm font-semibold text-slate-200 flex items-center justify-between mb-3">
+          <span class="flex items-center gap-2"><span>💬</span> Task Specification</span>
+          <span class="text-[10px] text-emerald-400 font-mono">Zero-Cloud</span>
+        </h2>
+        
+        <textarea id="taskInput" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500/60 resize-none font-sans" placeholder="Enter instructions or query for Sovereign AI Assistant..."></textarea>
+        
+        <!-- FILE DROPZONE / ATTACHMENT SIMULATOR -->
+        <div class="mt-3 border-2 border-dashed border-slate-800 hover:border-slate-700 rounded-lg p-3 text-center transition cursor-pointer bg-slate-950/50 relative" id="dropZone">
+          <input type="file" id="fileInput" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileSelected(event)">
+          <div id="dropZoneText" class="text-xs text-slate-400">
+            <span class="text-base block mb-1">📎</span>
+            <span class="font-medium text-slate-300">Attach Scanned PDF, P&ID Image, or Log</span>
+            <p class="text-[10px] text-slate-500 mt-0.5">Local OCR & Vision LLM process completely offline</p>
+          </div>
+        </div>
+
+        <!-- SUBMIT EXECUTION BUTTON -->
+        <button id="runTaskBtn" onclick="startAgenticExecution()" class="mt-4 w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2">
+          <span>🚀 Execute Sovereign Agent</span>
+        </button>
+      </div>
+
+      <!-- LOCAL RAG SOP SEARCH QUICK TOOL -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <h2 class="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
+          <span>🔍 Air-Gapped SOP Lookup</span>
+          <span class="text-[10px] text-slate-400 font-mono">ChromaDB</span>
+        </h2>
+        <div class="flex gap-2">
+          <input id="sopQuery" type="text" placeholder="e.g. Relief Valve Hydrotest SOP" class="flex-1 bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+          <button onclick="searchLocalSop()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs border border-slate-700">Search</button>
+        </div>
+        <div id="sopResult" class="mt-2 hidden p-2 bg-slate-950 border border-slate-800 rounded text-[11px] text-slate-300 font-mono"></div>
+      </div>
+    </section>
+
+    <!-- CENTER PANEL: LIVE AGENT EXECUTION CONSOLE & REACT TIMELINE (5 COLS) -->
+    <section class="lg:col-span-5 flex flex-col gap-4">
+      
+      <!-- TASK CLASSIFIER & MODEL ROUTER VISUALIZER -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <span>🔀</span> Dynamic Hardware-Aware Task Router
+          </h2>
+          <span id="taskCategoryBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+            Awaiting Input
+          </span>
+        </div>
+
+        <!-- ROUTING PIPELINE DIAGRAM -->
+        <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-mono mt-3">
+          <div id="route-doc" class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-500 transition-all">
+            <div class="font-bold">Doc / Report</div>
+            <div class="text-[9px] mt-0.5">Mistral-7B</div>
+          </div>
+          <div id="route-code" class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-500 transition-all">
+            <div class="font-bold">Code / PLC</div>
+            <div class="text-[9px] mt-0.5">Qwen2.5-Coder</div>
+          </div>
+          <div id="route-math" class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-500 transition-all">
+            <div class="font-bold">Math / Thermo</div>
+            <div class="text-[9px] mt-0.5">DeepSeek-R1</div>
+          </div>
+          <div id="route-vision" class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-500 transition-all">
+            <div class="font-bold">Vision / P&ID</div>
+            <div class="text-[9px] mt-0.5">Llama3.2-Vision</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGENT REACT PLANNING LOOP & LIVE CONSOLE -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex-1 flex flex-col min-h-[420px]">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+          <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <span>🧠</span> Agent ReAct Planning Loop
+          </h2>
+          <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+            <span class="w-2 h-2 rounded-full bg-emerald-500" id="agentStatusDot"></span>
+            <span id="agentStatusText">Idle</span>
+          </div>
+        </div>
+
+        <!-- STEP TIMELINE PROGRESS -->
+        <div class="space-y-2 mb-3 text-xs" id="stepTimeline">
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-1">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">1</span>
+            <span class="flex-1 font-medium">Hardware Profiling & VRAM Check</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-1-status">Pending</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-2">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">2</span>
+            <span class="flex-1 font-medium">Task Classification & Model Selection</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-2-status">Pending</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-3">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">3</span>
+            <span class="flex-1 font-medium">Local Knowledge Grounding (RAG Query)</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-3-status">Pending</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-4">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">4</span>
+            <span class="flex-1 font-medium">Local LLM Inference & Solution Synthesis</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-4-status">Pending</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-5">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">5</span>
+            <span class="flex-1 font-medium">Permission Interceptor Gate</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-5-status">Pending</span>
+          </div>
+
+          <div class="flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60" id="step-6">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px] flex items-center justify-center font-bold">6</span>
+            <span class="flex-1 font-medium">Sandboxed Deliverable Output Creation</span>
+            <span class="text-[10px] font-mono text-slate-500" id="step-6-status">Pending</span>
+          </div>
+        </div>
+
+        <!-- STREAMING AGENT REASONING OUTPUT CONSOLE -->
+        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-emerald-400/90 overflow-y-auto max-h-[260px] leading-relaxed shadow-inner" id="agentConsole">
+          <div class="text-slate-600">// Sovereign Agent Standby Mode. Select a preset or type a task above.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: DELIVERABLES & AIR-GAP PACKET LOGS (4 COLS) -->
+    <section class="lg:col-span-4 flex flex-col gap-4">
+      
+      <!-- GENERATED DELIVERABLE / ARTIFACT PREVIEW -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm flex-1 flex flex-col">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+          <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <span>📄</span> Generated Artifact Deliverable
+          </h2>
+          <span id="artifactBadge" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Draft Ready</span>
+        </div>
+
+        <div id="deliverablePreview" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-y-auto max-h-[300px] leading-relaxed">
+          <div class="text-slate-500 italic text-center py-8">
+            No deliverable compiled yet.<br>Run an agent task to generate Microsoft Word (.docx) approval notes or code modules.
+          </div>
+        </div>
+
+        <!-- EXPORT / DOWNLOAD ACTION BUTTONS -->
+        <div class="mt-4 grid grid-cols-2 gap-2">
+          <button onclick="downloadDeliverableDocx()" class="py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+            <span>📥 Download .docx</span>
+          </button>
+          <button onclick="downloadDeliverableTxt()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700">
+            <span>📋 Export Raw JSON/Text</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- AIR-GAP NETWORK MONITOR AUDIT STREAM -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <span>🛡️</span> Zero-Network Socket Audit Stream
+          </h2>
+          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">
+            100% Offline
+          </span>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 font-mono text-[10px] text-slate-400 h-[130px] overflow-y-auto space-y-1" id="packetLogs">
+          <div class="text-emerald-500/80">[SYSTEM] Socket listener bound to 127.0.0.1 (Loopback only).</div>
+          <div class="text-emerald-500/80">[FIREWALL] Outbound connections to external WAN strictly blocked.</div>
+          <div class="text-slate-500">[NETSTAT] Active sockets: 127.0.0.1:11434 (Local Ollama Engine).</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- INTERACTIVE PERMISSION GATE MODAL -->
+  <div id="permissionModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-xl max-w-md w-full p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+      <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl mb-4">
+        ⚠️
+      </div>
+      <h3 class="text-base font-bold text-slate-100">Permission Interceptor Required</h3>
+      <p class="text-xs text-slate-400 mt-1">The Sovereign Agent is requesting authorization to perform a write operation in local sandbox:</p>
+
+      <div class="my-4 p-3 bg-slate-950 border border-slate-800 rounded-lg font-mono text-xs space-y-1">
+        <div class="text-amber-300 font-bold" id="modalActionTitle">Action: Write File Deliverable</div>
+        <div class="text-slate-300 text-[11px]" id="modalActionDetails">Target: ./deliverables/Hydrocracker_Approval_Note.docx</div>
+        <div class="text-slate-500 text-[10px]">Permission Policy: Strict User Consent Mode</div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button onclick="respondPermission(true)" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition">
+          ✅ Authorize & Execute
+        </button>
+        <button onclick="respondPermission(false)" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold border border-slate-700 transition">
+          ❌ Deny Action
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT INTERACTIVE CONTROLLER -->
+  <script>
+    // GLOBAL STATE
+    let isAutonomousGate = false;
+    let selectedFile = null;
+    let currentTaskCategory = 'general';
+    let currentModel = 'mistral:7b';
+    let generatedReportContent = '';
+
+    // PRESET LOADER
+    function loadPreset(id) {
+      const taskInput = document.getElementById('taskInput');
+      if (id === 1) {
+        taskInput.value = "Read Hydrocracker Unit-4 pressure log data (P=142.5 bar, T=410°C). Verify safety thresholds against MRPL SOP-HC-2024 and generate a formal Microsoft Word (.docx) inspection approval note for the operations manager.";
+      } else if (id === 2) {
+        taskInput.value = "Write a standalone Python script to poll crude oil storage tank telemetry, calculate volume thermal expansion variance, and output structured alerts if temperature exceeds 65°C.";
+      } else if (id === 3) {
+        taskInput.value = "Parse scanned P&ID diagram (PND-HC-402.png) to extract specifications for Pressure Safety Valve PSV-102A and check maintenance log history in local ChromaDB knowledge base.";
+      }
+    }
+
+    // TOGGLE PERMISSION GATE MODE
+    function toggleGateMode() {
+      isAutonomousGate = !isAutonomousGate;
+      const btn = document.getElementById('toggleGateBtn');
+      if (isAutonomousGate) {
+        btn.innerHTML = '⚡ Autonomous (Auto-Approve)';
+        btn.className = 'px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-medium hover:bg-emerald-500/30 transition';
+        addPacketLog('[SECURITY] Switched to Autonomous Execution Mode.');
+      } else {
+        btn.innerHTML = '🛡️ Interactive Modal';
+        btn.className = 'px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium hover:bg-amber-500/30 transition';
+        addPacketLog('[SECURITY] Switched to Strict User Consent Gate Mode.');
+      }
+    }
+
+    // FILE ATTACHMENT HANDLER
+    function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        document.getElementById('dropZoneText').innerHTML = `
+          <span class="text-emerald-400 font-bold block mb-0.5">📄 Attached: ${file.name}</span>
+          <span class="text-[10px] text-slate-400">(${(file.size/1024).toFixed(1)} KB • OCR Ready)</span>
+        `;
+        addPacketLog(`[FILE IO] Loaded local file '${file.name}' into sandbox memory.`);
+      }
+    }
+
+    // SEARCH LOCAL RAG SOP
+    function searchLocalSop() {
+      const query = document.getElementById('sopQuery').value.trim();
+      const resultDiv = document.getElementById('sopResult');
+      if (!query) return;
+
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = `<span class="text-slate-400">Searching ChromaDB local embeddings...</span>`;
+      
+      setTimeout(() => {
+        resultDiv.innerHTML = `
+          <div class="text-cyan-400 font-bold mb-1">Found Match in MRPL_SOP_HC_2024.pdf (Page 14):</div>
+          <div class="text-slate-300">"Section 4.2: Maximum allowable working pressure (MAWP) for Hydrocracker Reactor-A is 150.0 bar at 425°C. Any pressure reading exceeding 140.0 bar requires dual safety valve calibration."</div>
+        `;
+        addPacketLog(`[RAG ENGINE] Retrieved SOP match from local vectorstore for query: '${query}'`);
+      }, 500);
+    }
+
+    // AGENTIC EXECUTION WORKFLOW SIMULATOR
+    let executionStepResolver = null;
+
+    function startAgenticExecution() {
+      const prompt = document.getElementById('taskInput').value.trim();
+      if (!prompt) {
+        alert("Please enter a task or select an industrial scenario preset.");
+        return;
+      }
+
+      // Reset Timeline
+      for (let i = 1; i <= 6; i++) {
+        const step = document.getElementById(`step-${i}`);
+        const status = document.getElementById(`step-${i}-status`);
+        step.className = "flex items-center gap-3 p-2 rounded bg-slate-950/60 border border-slate-800 text-slate-400 opacity-60";
+        status.textContent = "Pending";
+        status.className = "text-[10px] font-mono text-slate-500";
+      }
+
+      const consoleDiv = document.getElementById('agentConsole');
+      consoleDiv.innerHTML = `<div class="text-emerald-400 font-bold">// Initializing Sovereign Agentic Loop...</div>`;
+      document.getElementById('agentStatusText').textContent = 'Processing...';
+      document.getElementById('agentStatusText').className = 'text-amber-400 font-bold';
+
+      // STEP 1: Hardware Profiler
+      updateStep(1, 'Running', 'text-amber-400');
+      logToConsole("[1/6 HARDWARE CHECK] Profiling GPU VRAM & CPU resources...");
+      
+      setTimeout(() => {
+        updateStep(1, 'Completed', 'text-emerald-400');
+        logToConsole(" -> System VRAM: 12.0 GB (RTX 4070). Free VRAM: 7.8 GB. Hardware fit verified.");
+        
+        // STEP 2: Task Classifier & Routing
+        updateStep(2, 'Running', 'text-amber-400');
+        classifyAndRoute(prompt);
+      }, 700);
+    }
+
+    function classifyAndRoute(prompt) {
+      const promptLower = prompt.toLowerCase();
+      let routeId = 'route-doc';
+      let categoryLabel = 'Document Drafting';
+      
+      if (selectedFile || promptLower.includes('drawing') || promptLower.includes('p&id') || promptLower.includes('diagram')) {
+        currentTaskCategory = 'vision';
+        currentModel = 'llama3.2-vision:11b';
+        routeId = 'route-vision';
+        categoryLabel = 'Vision & Drawing Analysis';
+      } else if (promptLower.includes('code') || promptLower.includes('python') || promptLower.includes('script') || promptLower.includes('plc')) {
+        currentTaskCategory = 'coding';
+        currentModel = 'qwen2.5-coder:7b';
+        routeId = 'route-code';
+        categoryLabel = 'Industrial Automation Code';
+      } else if (promptLower.includes('calculate') || promptLower.includes('pressure') || promptLower.includes('duty') || promptLower.includes('heat')) {
+        currentTaskCategory = 'math';
+        currentModel = 'deepseek-r1:7b';
+        routeId = 'route-math';
+        categoryLabel = 'Thermodynamic Calculation';
+      } else {
+        currentTaskCategory = 'general';
+        currentModel = 'mistral:7b';
+        routeId = 'route-doc';
+        categoryLabel = 'Document & SOP Analysis';
+      }
+
+      // Highlight Router UI
+      ['route-doc', 'route-code', 'route-math', 'route-vision'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'p-2 rounded bg-slate-950 border border-slate-800 text-slate-500 transition-all';
+      });
+      const activeEl = document.getElementById(routeId);
+      activeEl.className = 'p-2 rounded bg-emerald-950/80 border border-emerald-500 text-emerald-300 font-bold shadow-lg transition-all scale-105';
+
+      document.getElementById('taskCategoryBadge').textContent = categoryLabel;
+      document.getElementById('activeModelLabel').textContent = currentModel;
+
+      logToConsole(`[2/6 TASK ROUTER] Classified: ${categoryLabel}`);
+      logToConsole(` -> Selected Model: '${currentModel}' (VRAM Footprint: ~5.4 GB)`);
+
+      setTimeout(() => {
+        updateStep(2, 'Completed', 'text-emerald-400');
+        
+        // STEP 3: Local RAG Knowledge Base Retrieval
+        updateStep(3, 'Running', 'text-amber-400');
+        logToConsole("[3/6 LOCAL RAG] Querying offline ChromaDB vector index for relevant refinery SOPs...");
+        
+        setTimeout(() => {
+          updateStep(3, 'Completed', 'text-emerald-400');
+          logToConsole(" -> Retrieved context: MRPL_SOP_HC_2024.pdf (MAWP Limit: 150.0 bar). Grounding prompt.");
+          
+          // STEP 4: Local LLM Inference
+          updateStep(4, 'Running', 'text-amber-400');
+          logToConsole(`[4/6 LOCAL LLM INFERENCE] Invoking local Ollama endpoint (${currentModel})...`);
+          
+          setTimeout(() => {
+            updateStep(4, 'Completed', 'text-emerald-400');
+            logToConsole(" -> Inference complete. Draft solution generated.");
+
+            // STEP 5: Permission Gate Interceptor
+            updateStep(5, 'Running', 'text-amber-400');
+            logToConsole("[5/6 PERMISSION GATE] Intercepting tool request: Write file to sandbox.");
+            
+            if (isAutonomousGate) {
+              logToConsole(" -> Auto-Approved by Permission Policy.");
+              updateStep(5, 'Completed', 'text-emerald-400');
+              finishExecution();
+            } else {
+              // Open Modal
+              document.getElementById('modalActionTitle').textContent = `Action: Generate ${currentTaskCategory === 'coding' ? 'Python Script' : 'Microsoft Word (.docx) Note'}`;
+              document.getElementById('modalActionDetails').textContent = `File target: ./deliverables/${getFilename()}`;
+              document.getElementById('permissionModal').classList.remove('hidden');
+            }
+          }, 1200);
+        }, 800);
+      }, 800);
+    }
+
+    function respondPermission(approved) {
+      document.getElementById('permissionModal').classList.add('hidden');
+      if (approved) {
+        logToConsole(" -> Authorized by user operator via Interactive Gate Modal.");
+        updateStep(5, 'Completed', 'text-emerald-400');
+        finishExecution();
+      } else {
+        logToConsole(" ❌ ACTION DENIED BY OPERATOR. Halting sandbox execution.");
+        updateStep(5, 'Denied', 'text-red-400');
+        document.getElementById('agentStatusText').textContent = 'Aborted by User';
+        document.getElementById('agentStatusText').className = 'text-red-400 font-bold';
+      }
+    }
+
+    function finishExecution() {
+      // STEP 6: Deliverable Creation
+      updateStep(6, 'Running', 'text-amber-400');
+      logToConsole("[6/6 DELIVERABLE BUILDER] Compiling final report artifact...");
+
+      setTimeout(() => {
+        updateStep(6, 'Completed', 'text-emerald-400');
+        logToConsole(" -> Deliverable successfully generated & ready for download!");
+
+        document.getElementById('agentStatusText').textContent = 'Completed (Air-Gapped)';
+        document.getElementById('agentStatusText').className = 'text-emerald-400 font-bold';
+
+        // Render Artifact
+        renderDeliverableArtifact();
+        addPacketLog(`[AUDIT COMPLETE] Task executed successfully with ZERO WAN outbound packets.`);
+      }, 600);
+    }
+
+    function getFilename() {
+      if (currentTaskCategory === 'coding') return 'tank_telemetry_monitor.py';
+      return 'Hydrocracker_Inspection_Approval_Note.docx';
+    }
+
+    function renderDeliverableArtifact() {
+      const preview = document.getElementById('deliverablePreview');
+      const badge = document.getElementById('artifactBadge');
+      
+      if (currentTaskCategory === 'coding') {
+        badge.textContent = '.py Script';
+        badge.className = 'text-[10px] px-2 py-0.5 rounded bg-purple-900/60 text-purple-300 font-mono border border-purple-700/50';
+        generatedReportContent = `# MRPL REFINERY AUTOMATION CODE MODULE
+# Generated by Sovereign AI Workbench (Qwen2.5-Coder:7B)
+# Classification: RESTRICTED / INTERNAL USE ONLY
+
+import time
+import sys
+
+CRUDE_TANK_MAX_TEMP = 65.0  # Deg C
+TELEMETRY_SOURCE = "opc.tcp://10.20.4.12:4840/MRPL/TankFarm"
+
+def monitor_tank_variance():
+    print("[MRPL TELEMETRY] Initializing offline OPC-UA sensor poll...")
+    current_temp = 68.4  # Simulated reading
+    
+    if current_temp > CRUDE_TANK_MAX_TEMP:
+        print(f"⚠️ ALERT: Tank 104-A Temperature Exceeds Threshold: {current_temp}°C")
+        trigger_cooling_valve_bypass()
+
+def trigger_cooling_valve_bypass():
+    print("[PLC ACTION] Actuating emergency cooling loop valve V-402...")
+
+if __name__ == '__main__':
+    monitor_tank_variance()`;
+
+        preview.innerHTML = `<pre class="text-purple-300 text-[11px] leading-relaxed">${escapeHtml(generatedReportContent)}</pre>`;
+      } else {
+        badge.textContent = '.docx Document';
+        badge.className = 'text-[10px] px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-mono border border-blue-700/50';
+        generatedReportContent = `================================================================================
+          MANGALORE REFINERY AND PETROCHEMICALS LIMITED (MRPL)
+                CONFIDENTIAL INTERNAL APPROVAL NOTE
+================================================================================
+DATE: 2026-09-16 | CLASSIFICATION: INTERNAL USE ONLY
+SUBJECT: Hydrocracker Unit-4 Pressure Log Audit & Inspection Clearance
+
+1. EXECUTIVE SUMMARY
+---------------------
+An automated audit of Hydrocracker Unit-4 operational telemetry was conducted 
+using the on-device Sovereign AI Workbench. Analyzed data logged an operating 
+pressure of 142.5 bar at 410°C over a 24-hour cycle.
+
+2. SOP COMPLIANCE ANALYSIS (MRPL_SOP_HC_2024)
+---------------------------------------------
+• Maximum Allowable Working Pressure (MAWP): 150.0 bar (COMPLIANT)
+• Operating Pressure (142.5 bar) exceeds 140.0 bar threshold requiring dual
+  safety valve calibration verification.
+• Relief Valve PSV-102A last inspected: 2026-06-12 (WITHIN 6-MONTH WINDOW)
+
+3. RECOMMENDATION & APPROVAL SANCTION
+--------------------------------------
+Approval is GRANTED for continued operation under normal throughput parameters, 
+subject to mandatory secondary pressure sensor calibration during scheduled shift maintenance.
+
+RECOMMENDED BY: Sovereign AI Workstation (SIH26117)
+APPROVED BY: ___________________________ (Operations Manager Signature)`;
+
+        preview.innerHTML = `<pre class="text-blue-200 text-[11px] whitespace-pre-wrap leading-relaxed">${escapeHtml(generatedReportContent)}</pre>`;
+      }
+    }
+
+    // DOWNLOAD HANDLERS
+    function downloadDeliverableDocx() {
+      if (!generatedReportContent) {
+        alert("Please run an agent task first to generate a deliverable.");
+        return;
+      }
+      const filename = getFilename();
+      const blob = new Blob([generatedReportContent], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      addPacketLog(`[DOWNLOAD] Deliverable saved to local client storage as '${filename}'.`);
+    }
+
+    function downloadDeliverableTxt() {
+      if (!generatedReportContent) {
+        alert("Please run an agent task first to generate a deliverable.");
+        return;
+      }
+      const blob = new Blob([generatedReportContent], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'sovereign_ai_deliverable.txt';
+      link.click();
+    }
+
+    // HELPER UTILITIES
+    function updateStep(stepNum, text, colorClass) {
+      const step = document.getElementById(`step-${stepNum}`);
+      const status = document.getElementById(`step-${stepNum}-status`);
+      step.className = "flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-700 text-slate-200 font-medium";
+      status.textContent = text;
+      status.className = `text-[10px] font-mono ${colorClass} font-bold`;
+    }
+
+    function logToConsole(msg) {
+      const consoleDiv = document.getElementById('agentConsole');
+      const time = new Date().toLocaleTimeString();
+      consoleDiv.innerHTML += `<div class="my-0.5"><span class="text-slate-500">[${time}]</span> ${escapeHtml(msg)}</div>`;
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+
+    function addPacketLog(msg) {
+      const packetLogs = document.getElementById('packetLogs');
+      const time = new Date().toLocaleTimeString();
+      packetLogs.innerHTML += `<div class="text-emerald-400/90"><span class="text-slate-500">[${time}]</span> ${escapeHtml(msg)}</div>`;
+      packetLogs.scrollTop = packetLogs.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // SIMULATED VRAM JITTER FOR PRESENTATION IMPACT
+    setInterval(() => {
+      const usageSpan = document.getElementById('vramUsage');
+      const circle = document.getElementById('vramCircle');
+      if (usageSpan && circle) {
+        const val = (4.1 + Math.random() * 0.4).toFixed(1);
+        usageSpan.textContent = val;
+        const offset = 113 - (val / 12.0) * 113;
+        circle.setAttribute('stroke-dashoffset', offset);
+      }
+    }, 3000);
+  </script>
+</body>
+</html>

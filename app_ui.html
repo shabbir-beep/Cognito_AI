@@ -1,0 +1,2835 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local AI Workbench v2.0</title>
+  <link rel="icon" type="image/png" href="/icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // PRESET THEMES PALETTES (5 Distinct Luxury Themes - Claude/Gemini Clean Aesthetics)
+    const THEME_PRESETS = {
+      midnight: {
+        name: 'Midnight Obsidian',
+        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>',
+        isDark: true,
+        vars: {
+          '--bg-canvas': '#07090e',
+          '--bg-sidebar': '#0a0d14',
+          '--bg-header': 'rgba(10, 13, 20, 0.9)',
+          '--bg-surface': '#10141e',
+          '--bg-surface-hover': '#171c2a',
+          '--bg-surface-active': '#1f2537',
+          '--bg-input': 'rgba(16, 20, 30, 0.95)',
+          '--bg-modal': '#0c0f17',
+          '--bg-chat-ai': 'rgba(16, 20, 30, 0.85)',
+          '--bg-chat-user': '#182030',
+          '--text-chat-user': '#f8fafc',
+          '--text-primary': '#f8fafc',
+          '--text-secondary': '#94a3b8',
+          '--text-muted': '#64748b',
+          '--border-subtle': 'rgba(255, 255, 255, 0.08)',
+          '--border-focus': 'rgba(255, 255, 255, 0.25)',
+          '--accent-primary': '#38bdf8',
+          '--accent-glow': 'rgba(56, 189, 248, 0.12)',
+          '--accent-emerald': '#10b981',
+          '--accent-cyan': '#06b6d4',
+          '--code-bg': '#06080d',
+          '--code-border': 'rgba(255, 255, 255, 0.08)'
+        }
+      },
+      alabaster: {
+        name: 'Alabaster Titanium',
+        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>',
+        isDark: false,
+        vars: {
+          '--bg-canvas': '#f8fafc',
+          '--bg-sidebar': '#ffffff',
+          '--bg-header': 'rgba(255, 255, 255, 0.92)',
+          '--bg-surface': '#ffffff',
+          '--bg-surface-hover': '#f1f5f9',
+          '--bg-surface-active': '#e2e8f0',
+          '--bg-input': '#ffffff',
+          '--bg-modal': '#ffffff',
+          '--bg-chat-ai': '#ffffff',
+          '--bg-chat-user': '#0f172a',
+          '--text-chat-user': '#ffffff',
+          '--text-primary': '#0f172a',
+          '--text-secondary': '#475569',
+          '--text-muted': '#94a3b8',
+          '--border-subtle': '#e2e8f0',
+          '--border-focus': '#94a3b8',
+          '--accent-primary': '#0284c7',
+          '--accent-glow': 'rgba(2, 132, 199, 0.15)',
+          '--accent-emerald': '#059669',
+          '--accent-cyan': '#0891b2',
+          '--code-bg': '#f1f5f9',
+          '--code-border': '#e2e8f0'
+        }
+      },
+      cyber_azure: {
+        name: 'Graphite Indigo',
+        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+        isDark: true,
+        vars: {
+          '--bg-canvas': '#0b0f19',
+          '--bg-sidebar': '#0e1320',
+          '--bg-header': 'rgba(14, 19, 32, 0.9)',
+          '--bg-surface': '#151c2e',
+          '--bg-surface-hover': '#1e263d',
+          '--bg-surface-active': '#27324f',
+          '--bg-input': 'rgba(21, 28, 46, 0.95)',
+          '--bg-modal': '#111728',
+          '--bg-chat-ai': 'rgba(21, 28, 46, 0.85)',
+          '--bg-chat-user': '#253556',
+          '--text-chat-user': '#ffffff',
+          '--text-primary': '#f1f5f9',
+          '--text-secondary': '#94a3b8',
+          '--text-muted': '#64748b',
+          '--border-subtle': 'rgba(99, 102, 241, 0.18)',
+          '--border-focus': 'rgba(129, 140, 248, 0.4)',
+          '--accent-primary': '#6366f1',
+          '--accent-glow': 'rgba(99, 102, 241, 0.2)',
+          '--accent-emerald': '#34d399',
+          '--accent-cyan': '#38bdf8',
+          '--code-bg': '#090d16',
+          '--code-border': 'rgba(99, 102, 241, 0.16)'
+        }
+      },
+      emerald_matrix: {
+        name: 'Dark Emerald Obsidian',
+        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>',
+        isDark: true,
+        vars: {
+          '--bg-canvas': '#060f0c',
+          '--bg-sidebar': '#081511',
+          '--bg-header': 'rgba(8, 21, 17, 0.9)',
+          '--bg-surface': '#0d221c',
+          '--bg-surface-hover': '#133027',
+          '--bg-surface-active': '#193e33',
+          '--bg-input': 'rgba(13, 34, 28, 0.95)',
+          '--bg-modal': '#0a1a15',
+          '--bg-chat-ai': 'rgba(13, 34, 28, 0.85)',
+          '--bg-chat-user': '#064e3b',
+          '--text-chat-user': '#ffffff',
+          '--text-primary': '#f0fdf4',
+          '--text-secondary': '#a7f3d0',
+          '--text-muted': '#6ee7b7',
+          '--border-subtle': 'rgba(16, 185, 129, 0.16)',
+          '--border-focus': 'rgba(16, 185, 129, 0.35)',
+          '--accent-primary': '#10b981',
+          '--accent-glow': 'rgba(16, 185, 129, 0.2)',
+          '--accent-emerald': '#34d399',
+          '--accent-cyan': '#6ee7b7',
+          '--code-bg': '#040d0a',
+          '--code-border': 'rgba(16, 185, 129, 0.16)'
+        }
+      },
+      amethyst_royale: {
+        name: 'Obsidian Violet',
+        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 17l3-12 6 5 6-5 3 12H3z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 17h18"/></svg>',
+        isDark: true,
+        vars: {
+          '--bg-canvas': '#0c0a17',
+          '--bg-sidebar': '#100d1f',
+          '--bg-header': 'rgba(16, 13, 31, 0.9)',
+          '--bg-surface': '#17132b',
+          '--bg-surface-hover': '#211c3d',
+          '--bg-surface-active': '#2c2550',
+          '--bg-input': 'rgba(23, 19, 43, 0.95)',
+          '--bg-modal': '#130f24',
+          '--bg-chat-ai': 'rgba(23, 19, 43, 0.85)',
+          '--bg-chat-user': '#4c1d95',
+          '--text-chat-user': '#ffffff',
+          '--text-primary': '#faf5ff',
+          '--text-secondary': '#ddd6fe',
+          '--text-muted': '#a78bfa',
+          '--border-subtle': 'rgba(168, 85, 247, 0.16)',
+          '--border-focus': 'rgba(192, 132, 252, 0.35)',
+          '--accent-primary': '#a855f7',
+          '--accent-glow': 'rgba(168, 85, 247, 0.2)',
+          '--accent-emerald': '#e879f9',
+          '--accent-cyan': '#818cf8',
+          '--code-bg': '#080610',
+          '--code-border': 'rgba(168, 85, 247, 0.16)'
+        }
+      }
+    };
+
+    // Load initial theme without flash
+    (function() {
+      const savedThemeKey = localStorage.getItem('theme_key') || 'midnight';
+      const customVars = localStorage.getItem('theme_custom');
+      
+      let themeObj = THEME_PRESETS[savedThemeKey] || THEME_PRESETS['midnight'];
+      const isDark = themeObj.isDark;
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+
+      const root = document.documentElement;
+      Object.entries(themeObj.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+
+      if (savedThemeKey === 'custom' && customVars) {
+        try {
+          const parsed = JSON.parse(customVars);
+          Object.entries(parsed).forEach(([k, v]) => root.style.setProperty(k, v));
+        } catch(e) {}
+      }
+    })();
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+    /* DEFAULT BASE CSS VARIABLES (Deep Minimalist Slate Palette) */
+    :root {
+      --bg-canvas: #07090e;
+      --bg-sidebar: #0a0d14;
+      --bg-header: rgba(10, 13, 20, 0.9);
+      --bg-surface: #10141e;
+      --bg-surface-hover: #171c2a;
+      --bg-surface-active: #1f2537;
+      --bg-input: rgba(16, 20, 30, 0.95);
+      --bg-modal: #0c0f17;
+      --bg-chat-ai: rgba(16, 20, 30, 0.85);
+      --bg-chat-user: #182030;
+      --text-chat-user: #f8fafc;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(255, 255, 255, 0.25);
+      --accent-primary: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.12);
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --code-bg: #06080d;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --shadow-depth: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom high-contrast dropdown styling */
+    select {
+      background-color: var(--bg-surface) !important;
+      color: var(--text-primary) !important;
+    }
+    select option, select optgroup {
+      background-color: var(--bg-surface) !important;
+      color: var(--text-primary) !important;
+      padding: 8px 12px;
+    }
+
+    .border-subtle {
+      border-color: var(--border-subtle) !important;
+    }
+
+    /* Hand / Click pointer cursor on file upload and interactive buttons */
+    label[for="filePicker"], #filePicker, .cursor-pointer {
+      cursor: pointer !important;
+    }
+    label[for="filePicker"] * {
+      cursor: pointer !important;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+
+    /* TACTILE BUTTONS WITH DEPTH (Claude / Gemini Style) */
+    .btn-depth-primary {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%), var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+      color: var(--text-primary);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-depth-primary:hover {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%), var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    .btn-depth-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-depth-secondary {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-depth-secondary:hover {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%), var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: var(--text-primary);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+    .btn-depth-secondary:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-depth-action {
+      background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+      color: #090c15;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 #ffffff;
+      font-weight: 700;
+      transition: all 0.18s ease;
+    }
+    .btn-depth-action:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+      box-shadow: 0 5px 14px rgba(255, 255, 255, 0.25), inset 0 1px 0 #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* CARD ELEVATION WITH DEPTH */
+    .card-depth {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%), var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    }
+
+    .card-depth-interactive {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 100%), var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-depth-interactive:hover {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .session-pill-active {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%), var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+    }
+
+    .glass-sidebar {
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+    }
+    .glass-header {
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .glass-input-container {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .glass-input-container:focus-within {
+      border-color: var(--border-focus);
+      box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-focus);
+    }
+
+    .chat-bubble-user {
+      background: var(--bg-chat-user);
+      color: var(--text-chat-user);
+      border-radius: 20px 20px 4px 20px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .chat-bubble-ai {
+      background: var(--bg-chat-ai);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--text-primary);
+      border-radius: 20px 20px 20px 4px;
+      box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* LIGHT THEME EXPLICIT OVERRIDES */
+    html.light .btn-depth-primary {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), inset 0 1px 0 #ffffff;
+      color: #0f172a;
+    }
+    html.light .btn-depth-primary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    html.light .btn-depth-secondary {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    html.light .btn-depth-secondary:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+    html.light .btn-depth-action {
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid #0f172a;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.18);
+    }
+    html.light .btn-depth-action:hover {
+      background: #1e293b;
+      box-shadow: 0 5px 12px rgba(15, 23, 42, 0.25);
+    }
+    html.light .card-depth {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    html.light .card-depth-interactive {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    html.light .card-depth-interactive:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.07);
+    }
+    html.light .session-pill-active {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      color: #0f172a;
+    }
+    html.light .glass-input-container {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    html.light .glass-input-container:focus-within {
+      border-color: #0f172a;
+      box-shadow: 0 12px 36px -6px rgba(0, 0, 0, 0.12), 0 0 0 1px #0f172a;
+    }
+    html.light .chat-bubble-user {
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1px solid #0f172a;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+    }
+    html.light .chat-bubble-ai {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+    html.light .glass-sidebar {
+      background: #f8fafc;
+      border-right: 1px solid #e2e8f0;
+    }
+    html.light .glass-header {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    html.light ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+    }
+    html.light ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    html.light .bg-black\/80 {
+      background-color: rgba(15, 23, 42, 0.4) !important;
+    }
+    html.light .border-white\/10,
+    html.light .border-white\/15,
+    html.light .border-white\/20 {
+      border-color: #e2e8f0 !important;
+    }
+
+    /* HIGH-CONTRAST LIGHT THEME STATUS BADGES & ACCENT COLORS */
+    html.light .text-emerald-400,
+    html.light .text-green-400 {
+      color: #047857 !important;
+    }
+    html.light .text-cyan-400 {
+      color: #0284c7 !important;
+    }
+    html.light .text-red-400 {
+      color: #b91c1c !important;
+    }
+    html.light .bg-emerald-950\/30,
+    html.light .bg-emerald-950\/60 {
+      background-color: #ecfdf5 !important;
+      border-color: #a7f3d0 !important;
+      color: #047857 !important;
+    }
+    html.light .border-emerald-500\/20,
+    html.light .border-emerald-500\/30,
+    html.light .border-emerald-500\/40 {
+      border-color: #6ee7b7 !important;
+    }
+    html.light .bg-red-950\/60 {
+      background-color: #fef2f2 !important;
+      border-color: #fecaca !important;
+      color: #991b1b !important;
+    }
+
+    /* Markdown rendered AI content */
+    .ai-markdown h1, .ai-markdown h2, .ai-markdown h3, .ai-markdown h4 {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 1.1em;
+      margin-bottom: 0.4em;
+    }
+    .ai-markdown h1 { font-size: 1.3em; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.3em; }
+    .ai-markdown h2 { font-size: 1.15em; }
+    .ai-markdown h3 { font-size: 1.05em; color: var(--text-primary); }
+    .ai-markdown p { margin: 0.6em 0; line-height: 1.65; }
+    .ai-markdown ul, .ai-markdown ol { margin: 0.5em 0; padding-left: 1.5em; }
+    .ai-markdown ul { list-style-type: disc; }
+    .ai-markdown ol { list-style-type: decimal; }
+    .ai-markdown li { margin: 0.25em 0; }
+    .ai-markdown code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      padding: 0.15em 0.4em;
+      border-radius: 5px;
+      font-size: 0.88em;
+      color: #e2e8f0;
+    }
+    .ai-markdown pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 12px;
+      padding: 1em 1.2em;
+      overflow-x: auto;
+      margin: 0.85em 0;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+    .ai-markdown pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-primary);
+      font-size: 0.86em;
+    }
+    .ai-markdown blockquote {
+      border-left: 3px solid rgba(255, 255, 255, 0.3);
+      padding-left: 1em;
+      margin: 0.6em 0;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    .ai-markdown table {
+      border-collapse: collapse;
+      margin: 0.75em 0;
+      width: 100%;
+      font-size: 0.88em;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ai-markdown th, .ai-markdown td {
+      border: 1px solid var(--border-subtle);
+      padding: 0.5em 0.8em;
+      text-align: left;
+    }
+    .ai-markdown th {
+      background: var(--bg-surface-hover);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-bar-fill { transition: width 0.25s ease; }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden antialiased select-none">
+
+  <!-- LIGHTWEIGHT STARTUP SPLASH -->
+  <div id="appSplashScreen" class="fixed inset-0 bg-[#07090e] z-[200] flex flex-col items-center justify-center p-6 text-center space-y-6 text-white">
+    <div class="relative">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-b from-white/10 to-transparent border border-white/10 p-0.5 shadow-2xl">
+        <div class="w-full h-full bg-[#0c1017] rounded-[14px] flex items-center justify-center p-2.5">
+          <img src="/icon.png" class="w-10 h-10 object-contain">
+        </div>
+      </div>
+    </div>
+    <div class="space-y-1.5">
+      <h2 class="text-base font-extrabold tracking-wide text-slate-100">
+        SOVEREIGN AI WORKBENCH
+      </h2>
+      <p class="text-xs text-slate-400 font-mono" id="splashStatusText">Initializing runtime &amp; hardware engine...</p>
+    </div>
+  </div>
+
+  <!-- READ-ONLY DIRECTORY ERROR MODAL -->
+  <div id="readOnlyErrorModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[150] hidden flex items-center justify-center p-4">
+    <div class="bg-[var(--bg-surface)] border border-red-500/30 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto text-xl font-bold text-red-400">!</div>
+      <h3 class="text-base font-bold text-red-400">Read-Only Location Detected</h3>
+      <p class="text-xs text-secondary leading-relaxed" id="readOnlyErrorMsg">
+        The application is located in a read-only directory and cannot save models or settings.
+      </p>
+      <div class="text-[11px] bg-[var(--bg-canvas)] p-3 rounded-xl border border-subtle text-muted text-left font-mono" id="readOnlyAppDir">
+        Path: ...
+      </div>
+      <p class="text-xs text-slate-300 font-medium">Please extract the .zip folder to your <strong>Documents</strong> or <strong>Desktop</strong> and restart the app.</p>
+    </div>
+  </div>
+
+  <!-- PERSONALIZED AI SETUP & RECOMMENDATION WIZARD -->
+  <div id="mandatorySetupModal" class="fixed inset-0 bg-black/80 backdrop-blur-2xl z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="card-depth rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-3.5 text-left my-auto relative border border-subtle">
+      
+      <!-- Top Header & Close Button -->
+      <div class="flex items-center justify-between border-b border-subtle pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-b from-white/15 to-transparent border border-white/10 p-0.5 shadow-sm shrink-0">
+            <div class="w-full h-full bg-[#0c1017] rounded-[8px] flex items-center justify-center p-1">
+              <img src="/icon.png" class="w-5 h-5 object-contain">
+            </div>
+          </div>
+          <h2 class="text-base font-bold text-primary flex items-center gap-2">
+            Personalized AI Model Recommender
+          </h2>
+        </div>
+        <button id="wizardCloseBtn" onclick="closeRecommendationModal()" class="text-muted hover:text-primary text-base px-2 py-0.5 rounded-lg hover:bg-[var(--bg-surface-hover)] transition cursor-pointer font-bold hidden" title="Close"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+
+      <!-- PRIMARY WORKLOADS -->
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-primary flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <span>Select Primary Workloads &amp; Tasks</span>
+        </label>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+          <!-- Coding -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="coding" checked onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">Coding &amp; Automation</span>
+              <span class="text-[10px] text-secondary truncate block">Python, PLC scripts &amp; bug fixing</span>
+            </div>
+          </label>
+
+          <!-- Reasoning -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="reasoning" checked onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">Deep Reasoning &amp; Math</span>
+              <span class="text-[10px] text-secondary truncate block">Calculations &amp; root-cause analysis</span>
+            </div>
+          </label>
+
+          <!-- Vision & Diagram -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="vision" onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">Vision &amp; Diagrams</span>
+              <span class="text-[10px] text-secondary truncate block">P&amp;ID schematics &amp; blueprints</span>
+            </div>
+          </label>
+
+          <!-- General & SOP -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="general" onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">General Chat &amp; SOPs</span>
+              <span class="text-[10px] text-secondary truncate block">Documentation &amp; clearance notes</span>
+            </div>
+          </label>
+
+          <!-- Fast / Low Resource -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="lightweight" onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">Ultra-Fast &amp; Lightweight</span>
+              <span class="text-[10px] text-secondary truncate block">Sub-second generation on low RAM</span>
+            </div>
+          </label>
+
+          <!-- Enterprise High-Precision -->
+          <label class="usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none">
+            <input type="checkbox" value="enterprise" onchange="onPreferenceChange()" class="usecase-chk accent-slate-200 w-4 h-4 rounded cursor-pointer shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-[var(--bg-canvas)] border border-subtle flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            </div>
+            <div class="truncate flex-1">
+              <span class="font-bold text-primary block text-xs truncate">High-Precision Enterprise</span>
+              <span class="text-[10px] text-secondary truncate block">14B+ deep physics &amp; research</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Detected Hardware Summary Strip -->
+      <div class="grid grid-cols-4 gap-2 bg-[var(--bg-canvas)] p-2 rounded-xl border border-subtle text-left text-xs font-mono">
+        <div>
+          <span class="text-[9px] text-muted block uppercase">GPU</span>
+          <span class="font-bold text-primary truncate block text-[11px]" id="wizardHwGpu">Detecting...</span>
+        </div>
+        <div>
+          <span class="text-[9px] text-muted block uppercase">VRAM</span>
+          <span class="font-bold text-emerald-400 block text-[11px]" id="wizardHwVram">...</span>
+        </div>
+        <div>
+          <span class="text-[9px] text-muted block uppercase">RAM</span>
+          <span class="font-bold text-cyan-400 block text-[11px]" id="wizardHwRam">...</span>
+        </div>
+        <div>
+          <span class="text-[9px] text-muted block uppercase">CPU</span>
+          <span class="font-bold text-primary block text-[11px]" id="wizardHwCpu">...</span>
+        </div>
+      </div>
+
+      <!-- Recommended Model Highlight Card -->
+      <div class="p-3.5 rounded-2xl card-depth text-left space-y-2 border border-subtle">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full session-pill-active border border-subtle flex items-center gap-1" id="wizardBadge">
+            Optimal Recommendation
+          </span>
+          <span class="text-[11px] font-mono text-muted" id="wizardModelSize">~4.7 GB</span>
+        </div>
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-primary" id="wizardModelLabel">Qwen2.5-Coder (7B)</h3>
+          <p class="text-xs text-secondary mt-0.5" id="wizardModelDesc">Fast, intelligent model for coding, telemetry analysis, and industrial reasoning.</p>
+        </div>
+
+        <div class="text-[11px] text-secondary flex items-center gap-1.5 p-2 rounded-xl bg-[var(--bg-canvas)] border border-subtle font-mono">
+          <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span id="wizardWhyReason" class="truncate">Analyzing optimal match for selected workloads...</span>
+        </div>
+
+        <div id="wizardActionArea" class="pt-0.5">
+          <button onclick="downloadWizardRecommendedModel()" id="wizardDownloadBtn" class="w-full py-2.5 px-4 btn-depth-action rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer">
+            <span>Download &amp; Start Workbench</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Alternative Options -->
+      <div class="flex items-center justify-between text-xs text-secondary pt-1 border-t border-subtle">
+        <button onclick="openServerConfigModal()" class="text-muted hover:text-primary hover:underline cursor-pointer">
+          Connect Remote Server
+        </button>
+        <button onclick="openModelHubModal()" class="text-primary hover:underline cursor-pointer font-bold">
+          Browse All 30+ Models &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="w-64 glass-sidebar flex flex-col justify-between p-3.5 z-20 shrink-0 h-screen overflow-hidden">
+    <div class="flex-1 flex flex-col min-h-0 space-y-2.5">
+      <!-- BRAND & STREAMLINED LOGO -->
+      <div class="flex items-center gap-2.5 px-1 py-1 shrink-0">
+        <div class="w-7 h-7 rounded-xl bg-gradient-to-b from-white/15 to-transparent border border-white/10 p-0.5 shadow-sm shrink-0">
+          <div class="w-full h-full bg-[#0c1017] rounded-[8px] flex items-center justify-center p-1">
+            <img src="/icon.png" class="w-4 h-4 object-contain">
+          </div>
+        </div>
+        <div class="truncate">
+          <h1 class="text-xs font-bold tracking-wide text-primary truncate">SOVEREIGN WORKBENCH</h1>
+          <p class="text-[10px] text-muted truncate">Local AI • Air-Gapped</p>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS: NEW CHAT & NEW PROJECT (EQUAL SIZE WITH DEPTH) -->
+      <div class="grid grid-cols-2 gap-2 shrink-0">
+        <button onclick="createNewChatSession()" class="w-full py-2 px-3 rounded-xl btn-depth-primary text-xs font-semibold flex items-center justify-center gap-1.5 transition group cursor-pointer" title="Start a New Conversation">
+          <span class="text-sm font-bold leading-none opacity-80 group-hover:opacity-100">+</span>
+          <span>New Chat</span>
+        </button>
+        <button onclick="openNewProjectModal()" class="w-full py-2 px-3 rounded-xl btn-depth-secondary text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer" title="Create New Project Workspace">
+          <span class="text-sm font-bold leading-none opacity-80">+</span>
+          <span>Project</span>
+        </button>
+      </div>
+
+      <!-- MINIMALIST ACTIVE PROJECT SELECTOR -->
+      <div class="px-0.5 shrink-0 space-y-1">
+        <div class="flex items-center justify-between text-[10px] font-bold text-muted uppercase tracking-wider px-1">
+          <span>Workspace</span>
+          <span id="projectCountBadge" class="text-[9px] bg-white/[0.04] px-1.5 py-0.5 rounded text-muted font-mono border border-subtle">1</span>
+        </div>
+        <div class="relative">
+          <select id="projectSelect" onchange="onProjectSelectChange()" class="w-full card-depth-interactive rounded-xl px-2.5 py-1.5 text-xs text-primary font-medium focus:outline-none focus:border-white/20 cursor-pointer truncate">
+            <option value="all">All Conversations</option>
+            <option value="proj_default">General Workspace</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- REAL PERSISTENT SESSIONS LIST -->
+      <div class="flex-1 flex flex-col min-h-0 pt-1">
+        <div class="text-[10px] font-bold text-muted uppercase tracking-wider px-1 mb-1.5 flex justify-between items-center shrink-0">
+          <span id="sessionListHeader">Recent Chats</span>
+          <span id="sessionCountBadge" class="text-[9px] bg-white/[0.04] px-1.5 py-0.5 rounded text-muted font-mono border border-subtle">0</span>
+        </div>
+        <div class="space-y-1 overflow-y-auto flex-1 pr-1" id="sessionList">
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM CONTROLS, SETTINGS & SERVER STATUS -->
+    <div class="space-y-2 shrink-0 pt-2 border-t border-subtle">
+      <!-- SETTINGS & CONTROLS TAB (ABOVE OLLAMA SERVERS) -->
+      <div class="card-depth rounded-2xl p-2.5 space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-muted uppercase tracking-wider px-0.5">
+          <span>Settings</span>
+          <span class="text-[9px] text-slate-400 font-mono">System</span>
+        </div>
+
+        <!-- SERVER CONNECTION & THEMES BUTTONS -->
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="openServerConfigModal()" class="w-full py-1.5 px-2.5 rounded-xl btn-depth-secondary text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer" title="Server Connection & Settings">
+            <span>Server</span>
+          </button>
+          <button onclick="openThemeModal()" class="w-full py-1.5 px-2.5 rounded-xl btn-depth-secondary text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer" title="Switch Theme & Palette">
+            <span>Themes</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- OLLAMA SERVER STATUS CARD -->
+      <div class="card-depth rounded-2xl p-2.5 text-[11px] font-mono">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] text-muted font-sans font-bold uppercase tracking-wider" id="serverTypeLabel">AI Engine</span>
+          <span id="engineDot" class="w-2 h-2 rounded-full bg-emerald-400 shadow-sm"></span>
+        </div>
+        <div class="text-secondary text-[10px] truncate font-sans font-medium" id="engineStatus">Ready</div>
+      </div>
+
+      <!-- HARDWARE SPECS CARD -->
+      <div class="card-depth rounded-2xl p-2.5 text-[11px] font-mono space-y-1">
+        <div class="text-primary font-medium truncate text-[11px]" id="hwGpu">GPU: Detecting...</div>
+        <div class="text-secondary flex justify-between text-[10px]">
+          <span>VRAM: <strong class="text-emerald-400 font-normal" id="hwVram">...</strong></span>
+          <span>RAM: <strong class="text-cyan-400 font-normal" id="hwRam">...</strong></span>
+        </div>
+        <div class="text-muted text-[10px] truncate" id="hwCpu">CPU: ... cores</div>
+        <button onclick="refreshHardwareAndUI()" class="w-full py-1 px-2 btn-depth-secondary rounded-lg text-[10px] font-medium flex items-center justify-center gap-1 transition mt-1 cursor-pointer">
+          Re-Scan Hardware
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT WORKBENCH -->
+  <div class="flex-1 flex flex-col h-full relative overflow-hidden bg-[var(--bg-canvas)]">
+
+    <!-- TOP NAVBAR -->
+    <header class="glass-header h-14 px-6 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="relative flex items-center">
+          <select id="modelSelect" onchange="onModelDropdownChange()" class="card-depth-interactive rounded-xl px-3.5 py-1.5 text-xs text-primary font-mono font-medium focus:outline-none focus:border-white/20 cursor-pointer max-w-sm" title="Active AI Model">
+          </select>
+        </div>
+
+        <button onclick="openModelHubModal()" class="px-3 py-1.5 btn-depth-secondary rounded-xl text-[11px] font-medium transition flex items-center gap-1.5 cursor-pointer" title="Download & Manage AI Models">
+          <span>Model Hub</span>
+        </button>
+
+        <button onclick="openRecommendationModal()" class="px-3 py-1.5 btn-depth-primary rounded-xl text-[11px] font-medium transition flex items-center gap-1.5 cursor-pointer" title="Personalized AI Model Recommender Wizard">
+          <span>AI Recommender</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 text-xs">
+        <div class="px-3 py-0.5 rounded-full bg-emerald-950/30 border border-emerald-500/20 font-mono text-emerald-400 text-[10px] flex items-center gap-1.5 font-medium shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span id="airGapStatusBadge">100% AIR-GAPPED</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CHAT MESSAGES SCROLL CONTAINER (FULL-WIDTH WRAPPER SO SCROLLBAR IS PINNED TO EXTREME RIGHT) -->
+    <div class="flex-1 overflow-y-auto w-full" id="chatScrollContainer">
+      <div class="p-6 space-y-6 max-w-4xl mx-auto w-full" id="chatContainer">
+      </div>
+    </div>
+
+    <!-- FLOATING BOTTOM INPUT AREA -->
+    <div class="p-4 max-w-4xl mx-auto w-full shrink-0">
+      <!-- Attached File Chip Preview -->
+      <div id="filePreviewBar" class="hidden mb-2 px-3.5 py-2 rounded-xl card-depth flex items-center justify-between text-xs text-primary">
+        <div class="flex items-center gap-2 truncate">
+          <span class="font-bold truncate" id="filePreviewName">document.docx</span>
+          <span id="filePreviewSize" class="text-[10px] text-muted font-mono">(0 KB)</span>
+        </div>
+        <button onclick="removeAttachedFile()" class="text-muted hover:text-red-400 text-sm pl-2 cursor-pointer font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+
+      <!-- Input Bar (Pill Capsule Design with Tactile Depth) -->
+      <div class="glass-input-container rounded-2xl p-2 flex items-end gap-2">
+        <!-- Attached File Picker (Native Click Pointer) -->
+        <div class="relative shrink-0">
+          <input type="file" id="filePicker" class="hidden" onchange="handleFilePicked(event)">
+          <label for="filePicker" class="w-9 h-9 rounded-xl btn-depth-secondary flex items-center justify-center transition cursor-pointer select-none text-secondary hover:text-primary" style="cursor: pointer !important;" title="Attach any file (PDF, Word, Excel, Images, Code, Logs)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+          </label>
+        </div>
+
+        <textarea id="chatInput" rows="1" onkeydown="handleKeyDown(event)" class="flex-1 bg-transparent border-0 text-sm text-primary placeholder-[var(--text-muted)] focus:outline-none focus:ring-0 resize-none max-h-36 py-1.5 px-2 font-sans leading-relaxed" placeholder="Ask anything... (Shift+Enter for newline, Enter to send)"></textarea>
+
+        <!-- Send / Stop Action Button -->
+        <button onclick="handleSendOrStopClick()" id="sendOrStopBtn" class="w-9 h-9 rounded-xl btn-depth-action flex items-center justify-center transition shrink-0 cursor-pointer" title="Send Prompt">
+          <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+      <div class="text-[10px] text-muted text-center mt-2 font-sans">
+        Sovereign AI Workbench • Air-Gapped Industrial AI Platform • Export to PDF, Word &amp; Text
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC MODEL HUB MODAL (WITH SEARCH & CATEGORIES) -->
+  <div id="modelHubModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[110] hidden flex items-center justify-center p-4">
+    <div class="card-depth rounded-3xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col space-y-4 border border-white/10">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-subtle pb-3">
+        <div>
+          <h3 class="text-base font-bold text-primary">Dynamic AI Model Hub</h3>
+          <p class="text-xs text-secondary mt-0.5">Explore, search, and download 30+ top AI models scored for your physical hardware.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="closeModelHubModal(); openRecommendationModal();" class="px-3 py-1.5 btn-depth-primary rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer">
+            AI Recommender
+          </button>
+          <button onclick="closeModelHubModal()" class="text-muted hover:text-primary text-xl px-2 cursor-pointer font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <div class="relative">
+        <input type="text" id="modelSearchInput" oninput="filterModelHubList()" placeholder="Search 30+ models by name, category, or capability (e.g. coding, reasoning, vision, 1.5b, 7b, deepseek, llama)..." class="w-full card-depth rounded-2xl px-4 py-2.5 text-xs text-primary placeholder-[var(--text-muted)] focus:outline-none focus:border-white/20 font-sans">
+      </div>
+
+      <!-- CATEGORY FILTER PILLS -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs shrink-0" id="categoryPillContainer">
+        <button onclick="selectModelCategory('all')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-bold transition btn-depth-action cursor-pointer" data-cat="all">
+          All (30+)
+        </button>
+        <button onclick="selectModelCategory('popular')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="popular">
+          Popular
+        </button>
+        <button onclick="selectModelCategory('Coding & Automation')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="Coding & Automation">
+          Coding
+        </button>
+        <button onclick="selectModelCategory('Reasoning & Math')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="Reasoning & Math">
+          Reasoning
+        </button>
+        <button onclick="selectModelCategory('Fast & Lightweight')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="Fast & Lightweight">
+          Fast / Low VRAM
+        </button>
+        <button onclick="selectModelCategory('General Chat & SOP')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="General Chat & SOP">
+          General &amp; SOP
+        </button>
+        <button onclick="selectModelCategory('Vision & Multimodal')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="Vision & Multimodal">
+          Vision
+        </button>
+        <button onclick="selectModelCategory('Large & Enterprise')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary cursor-pointer" data-cat="Large & Enterprise">
+          Large (14B+)
+        </button>
+        <button onclick="selectModelCategory('installed')" class="cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition btn-depth-secondary text-emerald-400 cursor-pointer" data-cat="installed">
+          Installed
+        </button>
+      </div>
+
+      <!-- DYNAMIC MODEL CATALOG LIST -->
+      <div class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs" id="modelHubList">
+      </div>
+
+      <!-- CUSTOM MODEL PULL INPUT -->
+      <div class="pt-2 border-t border-subtle flex items-center gap-2">
+        <input type="text" id="customModelInput" placeholder="Pull any custom tag from ollama.com/library (e.g. dolphin-mixtral, codellama:13b)..." class="flex-1 card-depth rounded-xl px-3 py-2 text-xs text-primary placeholder-[var(--text-muted)] focus:outline-none font-mono">
+        <button onclick="downloadCustomModel()" class="px-4 py-2 btn-depth-secondary font-bold rounded-xl text-xs transition shrink-0 cursor-pointer">
+          Pull Custom
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME & APPEARANCE CUSTOMIZATION MODAL -->
+  <div id="themeModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[125] hidden flex items-center justify-center p-4">
+    <div class="card-depth rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 border border-white/10">
+      <div class="flex items-center justify-between border-b border-subtle pb-3">
+        <div>
+          <h3 class="text-base font-bold text-primary">Theme &amp; Appearance</h3>
+          <p class="text-xs text-secondary mt-0.5">Select a luxury theme preset or configure custom colors.</p>
+        </div>
+        <button onclick="closeThemeModal()" class="text-muted hover:text-primary text-xl px-2 cursor-pointer font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+
+      <!-- 5 CURATED PRESETS -->
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-muted uppercase tracking-wider">Curated Themes</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="presetThemeCards">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- CUSTOM COLOR PALETTE BUILDER -->
+      <div class="p-4 rounded-2xl bg-[var(--bg-canvas)] border border-subtle space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-primary">
+            Custom Color Palette
+          </span>
+          <button onclick="resetThemeToDefault()" class="text-[10px] text-muted hover:text-white transition cursor-pointer">
+            Reset to Midnight
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block text-muted text-[10px] font-semibold mb-1">Canvas / Background</label>
+            <div class="flex items-center gap-2 bg-[var(--bg-surface)] p-1.5 rounded-xl border border-subtle">
+              <input type="color" id="cpBgCanvas" onchange="onCustomColorChange()" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent">
+              <span id="cpBgCanvasVal" class="font-mono text-[11px] text-secondary">#07090e</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-muted text-[10px] font-semibold mb-1">Surfaces &amp; Cards</label>
+            <div class="flex items-center gap-2 bg-[var(--bg-surface)] p-1.5 rounded-xl border border-subtle">
+              <input type="color" id="cpBgSurface" onchange="onCustomColorChange()" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent">
+              <span id="cpBgSurfaceVal" class="font-mono text-[11px] text-secondary">#10141e</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-muted text-[10px] font-semibold mb-1">Primary Accent</label>
+            <div class="flex items-center gap-2 bg-[var(--bg-surface)] p-1.5 rounded-xl border border-subtle">
+              <input type="color" id="cpAccent" onchange="onCustomColorChange()" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent">
+              <span id="cpAccentVal" class="font-mono text-[11px] text-secondary">#38bdf8</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-muted text-[10px] font-semibold mb-1">Text &amp; Foreground</label>
+            <div class="flex items-center gap-2 bg-[var(--bg-surface)] p-1.5 rounded-xl border border-subtle">
+              <input type="color" id="cpTextPrimary" onchange="onCustomColorChange()" class="w-7 h-7 rounded-lg cursor-pointer border-0 bg-transparent">
+              <span id="cpTextPrimaryVal" class="font-mono text-[11px] text-secondary">#f8fafc</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-1">
+        <button onclick="closeThemeModal()" class="py-2 px-5 btn-depth-action rounded-xl transition text-xs cursor-pointer">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVER CONNECTION CONFIG MODAL -->
+  <div id="serverConfigModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[120] hidden flex items-center justify-center p-4">
+    <div class="card-depth rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-white/10">
+      <div class="flex items-center justify-between border-b border-subtle pb-3">
+        <div>
+          <h3 class="text-base font-bold text-primary">AI Server Settings</h3>
+          <p class="text-xs text-secondary mt-0.5">Connect to local embedded Ollama, LAN, or remote OpenAI-compatible servers.</p>
+        </div>
+        <button onclick="closeServerConfigModal()" class="text-muted hover:text-primary text-xl px-2 cursor-pointer font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-secondary mb-1 font-semibold">Server Type</label>
+          <select id="cfgServerType" onchange="onServerTypeChange()" class="w-full card-depth rounded-xl p-2.5 text-primary font-mono focus:outline-none focus:border-white/20 cursor-pointer">
+            <option value="local">Local Embedded Ollama (127.0.0.1:11434)</option>
+            <option value="remote_ollama">Custom Ollama Server (LAN IP or Domain)</option>
+            <option value="openai_compatible">OpenAI-Compatible Endpoint (vLLM, LM Studio, Remote)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-secondary mb-1 font-semibold">Server URL / Base Address</label>
+          <input type="text" id="cfgServerUrl" placeholder="http://127.0.0.1:11434" class="w-full card-depth rounded-xl p-2.5 text-primary font-mono focus:outline-none focus:border-white/20">
+        </div>
+
+        <div id="cfgApiKeyContainer" class="hidden">
+          <label class="block text-secondary mb-1 font-semibold">API Key (Optional / Bearer Token)</label>
+          <input type="password" id="cfgApiKey" placeholder="sk-..." class="w-full card-depth rounded-xl p-2.5 text-primary font-mono focus:outline-none focus:border-white/20">
+        </div>
+
+        <div id="cfgTestResult" class="hidden p-2.5 rounded-xl text-[11px] font-mono"></div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="testActiveServerConnection()" class="flex-1 py-2 px-3 btn-depth-secondary text-primary font-semibold rounded-xl transition text-xs cursor-pointer">
+            Test Connection
+          </button>
+          <button onclick="saveActiveServerConfig()" class="flex-1 py-2 px-3 btn-depth-action rounded-xl transition text-xs cursor-pointer">
+            Save &amp; Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINIMALIST NEW PROJECT MODAL (ChatGPT / Gemini Style) -->
+  <div id="projectModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-[130] hidden flex items-center justify-center p-4">
+    <div class="card-depth rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-white/10">
+      <div class="flex items-center justify-between border-b border-subtle pb-3">
+        <div>
+          <h3 class="text-base font-bold text-primary">New Project Workspace</h3>
+          <p class="text-xs text-secondary mt-0.5">Organize chats, inspection logs, and reports into dedicated workspaces.</p>
+        </div>
+        <button onclick="closeNewProjectModal()" class="text-muted hover:text-primary text-xl px-2 cursor-pointer font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-secondary mb-1 font-semibold">Project Name</label>
+          <input type="text" id="newProjectName" placeholder="e.g. Hydrocracker Unit-4 Audit" class="w-full card-depth rounded-xl p-2.5 text-primary font-sans focus:outline-none focus:border-white/20" onkeydown="if(event.key==='Enter') saveNewProject()">
+        </div>
+
+        <div>
+          <label class="block text-secondary mb-1 font-semibold">Description / Scope (Optional)</label>
+          <textarea id="newProjectDesc" rows="2" placeholder="e.g. Dedicated workspace for analyzing telemetry logs and SOP compliance." class="w-full card-depth rounded-xl p-2.5 text-primary font-sans focus:outline-none focus:border-white/20 resize-none"></textarea>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="closeNewProjectModal()" class="flex-1 py-2 px-3 btn-depth-secondary text-secondary font-semibold rounded-xl transition text-xs cursor-pointer">
+            Cancel
+          </button>
+          <button onclick="saveNewProject()" class="flex-1 py-2 px-3 btn-depth-action rounded-xl transition text-xs cursor-pointer">
+            Create Project
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 card-depth px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs text-primary z-[300] hidden transition-all duration-300 border border-white/10">
+    <span id="toastIcon" class="text-base"></span>
+    <span id="toastMessage">Success</span>
+  </div>
+
+  <script>
+    let currentHardware = null;
+    let availableCatalog = [];
+    let installedModels = new Set();
+    let serverConfig = { type: 'local', url: 'http://127.0.0.1:11434', api_key: '' };
+    let projects = [];
+    let sessions = [];
+    let currentSessionId = null;
+    let currentSessionMessages = [];
+    let attachedFile = null;
+    let attachedFileContent = null;
+    let activeCategoryFilter = 'all';
+    let chatAbortController = null;
+    const activeDownloads = {};
+    window._rawMessageStore = {};
+
+    // ============================================================
+    // THEME MANAGEMENT & CUSTOM PALETTE ENGINE
+    // ============================================================
+    function applyPresetTheme(key) {
+      const theme = THEME_PRESETS[key];
+      if (!theme) return;
+
+      const html = document.documentElement;
+      if (theme.isDark) {
+        html.classList.add('dark');
+        html.classList.remove('light');
+      } else {
+        html.classList.add('light');
+        html.classList.remove('dark');
+      }
+
+      const root = document.documentElement;
+      Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+
+      localStorage.setItem('theme_key', key);
+      localStorage.removeItem('theme_custom');
+      renderThemeCards();
+      syncColorPickersWithComputed();
+      showToast(`Applied theme: ${theme.name}`, theme.icon);
+    }
+
+    function onCustomColorChange() {
+      const bgCanvas = document.getElementById('cpBgCanvas').value;
+      const bgSurface = document.getElementById('cpBgSurface').value;
+      const accent = document.getElementById('cpAccent').value;
+      const textPrimary = document.getElementById('cpTextPrimary').value;
+
+      document.getElementById('cpBgCanvasVal').textContent = bgCanvas;
+      document.getElementById('cpBgSurfaceVal').textContent = bgSurface;
+      document.getElementById('cpAccentVal').textContent = accent;
+      document.getElementById('cpTextPrimaryVal').textContent = textPrimary;
+
+      const customVars = {
+        '--bg-canvas': bgCanvas,
+        '--bg-sidebar': bgCanvas,
+        '--bg-header': bgCanvas + 'ee',
+        '--bg-surface': bgSurface,
+        '--bg-surface-hover': bgSurface,
+        '--bg-surface-active': bgSurface,
+        '--bg-input': bgSurface,
+        '--bg-modal': bgSurface,
+        '--bg-chat-ai': bgSurface + 'dd',
+        '--bg-chat-user': accent,
+        '--text-primary': textPrimary,
+        '--text-secondary': textPrimary + 'aa',
+        '--text-muted': textPrimary + '77',
+        '--border-focus': accent,
+        '--accent-amber': accent,
+        '--accent-amber-glow': accent + '40',
+        '--code-bg': bgCanvas
+      };
+
+      const root = document.documentElement;
+      Object.entries(customVars).forEach(([k, v]) => root.style.setProperty(k, v));
+
+      localStorage.setItem('theme_key', 'custom');
+      localStorage.setItem('theme_custom', JSON.stringify(customVars));
+      renderThemeCards();
+    }
+
+    function resetThemeToDefault() {
+      applyPresetTheme('midnight');
+    }
+
+    function syncColorPickersWithComputed() {
+      const s = getComputedStyle(document.documentElement);
+      const bg = rgbToHex(s.getPropertyValue('--bg-canvas').trim()) || '#07090e';
+      const surf = rgbToHex(s.getPropertyValue('--bg-surface').trim()) || '#111827';
+      const acc = rgbToHex(s.getPropertyValue('--accent-amber').trim()) || '#f59e0b';
+      const txt = rgbToHex(s.getPropertyValue('--text-primary').trim()) || '#f8fafc';
+
+      const c1 = document.getElementById('cpBgCanvas'); if (c1) c1.value = bg;
+      const c2 = document.getElementById('cpBgSurface'); if (c2) c2.value = surf;
+      const c3 = document.getElementById('cpAccent'); if (c3) c3.value = acc;
+      const c4 = document.getElementById('cpTextPrimary'); if (c4) c4.value = txt;
+
+      const v1 = document.getElementById('cpBgCanvasVal'); if (v1) v1.textContent = bg;
+      const v2 = document.getElementById('cpBgSurfaceVal'); if (v2) v2.textContent = surf;
+      const v3 = document.getElementById('cpAccentVal'); if (v3) v3.textContent = acc;
+      const v4 = document.getElementById('cpTextPrimaryVal'); if (v4) v4.textContent = txt;
+    }
+
+    function rgbToHex(color) {
+      if (!color) return '#000000';
+      if (color.startsWith('#')) return color.slice(0, 7);
+      const match = color.match(/\d+/g);
+      if (!match || match.length < 3) return '#000000';
+      const r = parseInt(match[0]).toString(16).padStart(2, '0');
+      const g = parseInt(match[1]).toString(16).padStart(2, '0');
+      const b = parseInt(match[2]).toString(16).padStart(2, '0');
+      return `#${r}${g}${b}`;
+    }
+
+    function renderThemeCards() {
+      const container = document.getElementById('presetThemeCards');
+      if (!container) return;
+      const activeKey = localStorage.getItem('theme_key') || 'midnight';
+      container.innerHTML = '';
+
+      Object.entries(THEME_PRESETS).forEach(([k, t]) => {
+        const isActive = (k === activeKey);
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-2xl cursor-pointer transition flex items-center justify-between ${
+          isActive 
+            ? 'session-pill-active border-white/20 text-primary' 
+            : 'card-depth-interactive text-secondary'
+        }`;
+        card.onclick = () => applyPresetTheme(k);
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5 truncate">
+            <span class="text-sm font-bold text-slate-300">${isActive ? '<span class="w-2.5 h-2.5 rounded-full bg-current"></span>' : '<span class="w-2.5 h-2.5 rounded-full border-2 border-current"></span>'}</span>
+            <div class="truncate">
+              <span class="text-xs font-semibold truncate block ${isActive ? 'text-primary' : 'text-slate-300'}">${esc(t.name)}</span>
+              <span class="text-[10px] text-muted">${t.isDark ? 'Dark Mode' : 'Light Mode'}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <span class="w-3 h-3 rounded-full border border-subtle" style="background: ${t.vars['--bg-canvas']}"></span>
+            <span class="w-3 h-3 rounded-full border border-subtle" style="background: ${t.vars['--bg-surface']}"></span>
+            <span class="w-3 h-3 rounded-full border border-subtle" style="background: ${t.vars['--accent-primary'] || t.vars['--text-primary']}"></span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openThemeModal() {
+      renderThemeCards();
+      syncColorPickersWithComputed();
+      const m = document.getElementById('themeModal');
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeThemeModal() {
+      const m = document.getElementById('themeModal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function showToast(message, icon = 'check') {
+      const t = document.getElementById('toastNotification');
+      if (!t) return;
+      const toastIconMap = {
+        'check': '<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
+        'folder': '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>',
+        'clipboard': '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-1M16 3h2a2 2 0 012 2v2M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2z"/></svg>',
+        'clock': '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+      };
+      document.getElementById('toastIcon').innerHTML = toastIconMap[icon] || toastIconMap['check'];
+      document.getElementById('toastMessage').textContent = message;
+      t.classList.remove('hidden', 'translate-y-2');
+      t.classList.add('translate-y-0');
+      setTimeout(() => {
+        t.classList.add('translate-y-2', 'hidden');
+        t.classList.remove('translate-y-0');
+      }, 3500);
+    }
+
+    // ============================================================
+    // STARTUP FLOW & ENGINE INITIALIZATION
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      const savedThemeKey = localStorage.getItem('theme_key');
+      if (savedThemeKey && THEME_PRESETS[savedThemeKey]) {
+        applyPresetTheme(savedThemeKey);
+      } else if (savedThemeKey === 'custom') {
+        const customJson = localStorage.getItem('theme_custom');
+        if (customJson) {
+          try {
+            const vars = JSON.parse(customJson);
+            const root = document.documentElement;
+            Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
+          } catch (e) {}
+        }
+      }
+      startStatusPolling();
+      await initializeStartupFlow();
+    });
+
+    async function initializeStartupFlow() {
+      const splash = document.getElementById('appSplashScreen');
+      const splashText = document.getElementById('splashStatusText');
+
+      try {
+        if (splashText) splashText.textContent = 'Detecting physical hardware & catalog...';
+        await refreshHardwareAndUI();
+
+        if (splashText) splashText.textContent = 'Loading server configuration...';
+        await loadServerConfig();
+
+        if (splashText) splashText.textContent = 'Restoring project workspaces...';
+        await loadProjectsFromBackend();
+
+        if (splashText) splashText.textContent = 'Restoring persistent chat sessions...';
+        await loadSessionsFromBackend();
+
+        if (splashText) splashText.textContent = 'Verifying installed AI models...';
+        await refreshLocalModels();
+
+        checkMandatorySetupRequirement();
+      } catch (err) {
+        console.error('Startup error:', err);
+      } finally {
+        if (splash) splash.classList.add('hidden');
+      }
+    }
+
+    async function refreshHardwareAndUI() {
+      try {
+        const res = await fetch('/api/hardware');
+        currentHardware = await res.json();
+        document.getElementById('hwGpu').textContent = currentHardware.gpu_name;
+        document.getElementById('hwVram').textContent = currentHardware.vram_gb + ' GB';
+        document.getElementById('hwRam').textContent = currentHardware.ram_gb + ' GB';
+        document.getElementById('hwCpu').textContent = currentHardware.cpu_cores + ' Cores';
+
+        document.getElementById('wizardHwGpu').textContent = currentHardware.gpu_name;
+        document.getElementById('wizardHwVram').textContent = currentHardware.vram_gb + ' GB';
+        document.getElementById('wizardHwRam').textContent = currentHardware.ram_gb + ' GB';
+        document.getElementById('wizardHwCpu').textContent = currentHardware.cpu_cores + ' Cores';
+
+        const catRes = await fetch('/api/available_models');
+        const catData = await catRes.json();
+        availableCatalog = catData.catalog || [];
+
+        const rec = availableCatalog.find(m => m.is_recommended) || availableCatalog[0];
+        if (rec) {
+          document.getElementById('wizardBadge').textContent = rec.status_badge || 'Recommended';
+          document.getElementById('wizardModelLabel').textContent = rec.label;
+          document.getElementById('wizardModelSize').textContent = '~' + rec.size_gb + ' GB';
+          document.getElementById('wizardModelDesc').textContent = rec.desc;
+
+          const whyElem = document.getElementById('wizardWhyReason');
+          if (whyElem) {
+            whyElem.textContent = rec.recommended_reason || currentHardware.recommended_reason || 'Selected as optimal model for your detected hardware.';
+          }
+
+          window._recommendedModelName = rec.name;
+        }
+
+        renderModelDropdown();
+        renderModelHubList();
+      } catch (err) {
+        console.error('Hardware fetch:', err);
+      }
+    }
+
+    async function loadServerConfig() {
+      try {
+        const res = await fetch('/api/server_config');
+        serverConfig = await res.json();
+        document.getElementById('cfgServerType').value = serverConfig.type || 'local';
+        document.getElementById('cfgServerUrl').value = serverConfig.url || 'http://127.0.0.1:11434';
+        document.getElementById('cfgApiKey').value = serverConfig.api_key || '';
+        onServerTypeChange();
+        updateAirGapBadge();
+      } catch (e) {}
+    }
+
+    function onServerTypeChange() {
+      const type = document.getElementById('cfgServerType').value;
+      const keyBox = document.getElementById('cfgApiKeyContainer');
+      const urlBox = document.getElementById('cfgServerUrl');
+      if (type === 'openai_compatible') {
+        keyBox.classList.remove('hidden');
+        if (!urlBox.value || urlBox.value.includes('11434')) urlBox.value = 'http://localhost:8000/v1';
+      } else {
+        keyBox.classList.add('hidden');
+        if (!urlBox.value || urlBox.value.includes('8000')) urlBox.value = 'http://127.0.0.1:11434';
+      }
+    }
+
+    async function testActiveServerConnection() {
+      const type = document.getElementById('cfgServerType').value;
+      const url = document.getElementById('cfgServerUrl').value;
+      const api_key = document.getElementById('cfgApiKey').value;
+      const resBox = document.getElementById('cfgTestResult');
+
+      resBox.className = 'p-2.5 rounded-xl text-[11px] font-mono bg-[var(--bg-surface)] border border-subtle text-secondary block';
+      resBox.textContent = 'Testing connection to ' + url + '...';
+
+      try {
+        const resp = await fetch('/api/test_server', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ type, url, api_key })
+        });
+        const d = await resp.json();
+        if (d.success) {
+          resBox.className = 'p-2.5 rounded-xl text-[11px] font-mono bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 block';
+          resBox.innerHTML = '<span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' + esc(d.message) + '</span>';
+        } else {
+          resBox.className = 'p-2.5 rounded-xl text-[11px] font-mono bg-red-950/60 border border-red-500/40 text-red-300 block';
+          resBox.innerHTML = '<span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>' + esc(d.message) + '</span>';
+        }
+      } catch (err) {
+        resBox.className = 'p-2.5 rounded-xl text-[11px] font-mono bg-red-950/60 border border-red-500/40 text-red-300 block';
+        resBox.innerHTML = '<span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Connection failed: ' + esc(err.message) + '</span>';
+      }
+    }
+
+    async function saveActiveServerConfig() {
+      const type = document.getElementById('cfgServerType').value;
+      const url = document.getElementById('cfgServerUrl').value;
+      const api_key = document.getElementById('cfgApiKey').value;
+
+      serverConfig = { ...serverConfig, type, url, api_key };
+      await fetch('/api/server_config', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(serverConfig)
+      });
+
+      closeServerConfigModal();
+      updateAirGapBadge();
+      await refreshLocalModels();
+      checkMandatorySetupRequirement();
+      showToast('Server settings updated');
+    }
+
+    function updateAirGapBadge() {
+      const badge = document.getElementById('airGapStatusBadge');
+      const label = document.getElementById('serverTypeLabel');
+      if (!badge || !label) return;
+      if (serverConfig.type === 'local') {
+        badge.textContent = '100% AIR-GAPPED';
+        label.textContent = 'Local Ollama';
+      } else if (serverConfig.type === 'remote_ollama') {
+        badge.textContent = 'REMOTE OLLAMA (LAN/WAN)';
+        label.textContent = 'Remote Ollama';
+      } else {
+        badge.textContent = 'OPENAI-COMPATIBLE API';
+        label.textContent = 'OpenAI API';
+      }
+    }
+
+    function checkMandatorySetupRequirement() {
+      const modal = document.getElementById('mandatorySetupModal');
+      const closeBtn = document.getElementById('wizardCloseBtn');
+      if (!modal) return;
+      if (serverConfig.type !== 'local') {
+        modal.classList.add('hidden');
+        if (closeBtn) closeBtn.classList.remove('hidden');
+        return;
+      }
+      if (installedModels.size > 0) {
+        modal.classList.add('hidden');
+        if (closeBtn) closeBtn.classList.remove('hidden');
+      } else {
+        modal.classList.remove('hidden');
+        if (closeBtn) closeBtn.classList.add('hidden');
+        onPreferenceChange();
+      }
+    }
+
+    function openRecommendationModal() {
+      const modal = document.getElementById('mandatorySetupModal');
+      const closeBtn = document.getElementById('wizardCloseBtn');
+      if (closeBtn) {
+        if (installedModels.size > 0 || serverConfig.type !== 'local') {
+          closeBtn.classList.remove('hidden');
+        } else {
+          closeBtn.classList.add('hidden');
+        }
+      }
+      if (modal) modal.classList.remove('hidden');
+      onPreferenceChange();
+    }
+
+    function closeRecommendationModal() {
+      const modal = document.getElementById('mandatorySetupModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function getSelectedPreferences() {
+      const chks = document.querySelectorAll('.usecase-chk:checked');
+      let useCases = Array.from(chks).map(c => c.value);
+      if (useCases.length === 0) useCases = ['general'];
+      return { language: 'English', use_cases: useCases };
+    }
+
+    async function onPreferenceChange() {
+      // Highlight active usecase cards while keeping vertical centering and alignment
+      document.querySelectorAll('.usecase-card').forEach(card => {
+        const chk = card.querySelector('.usecase-chk');
+        if (chk && chk.checked) {
+          card.className = "usecase-card session-pill-active flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none border-subtle";
+        } else {
+          card.className = "usecase-card card-depth-interactive flex items-center gap-3 p-3 rounded-2xl cursor-pointer select-none";
+        }
+      });
+
+      const { language, use_cases } = getSelectedPreferences();
+
+      try {
+        const resp = await fetch('/api/recommend_model', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ use_cases: use_cases, language: language })
+        });
+        const d = await resp.json();
+        if (d.status === 'success' && d.recommendation) {
+          applyRecommendationToWizardUI(d.recommendation);
+          return;
+        }
+      } catch (err) {}
+
+      computeClientSideRecommendation(use_cases, language);
+    }
+
+    function applyRecommendationToWizardUI(rec) {
+      const badge = document.getElementById('wizardBadge');
+      const label = document.getElementById('wizardModelLabel');
+      const size = document.getElementById('wizardModelSize');
+      const desc = document.getElementById('wizardModelDesc');
+      const why = document.getElementById('wizardWhyReason');
+
+      if (badge) badge.textContent = rec.badge || 'Recommended';
+      if (label) label.textContent = rec.label;
+      if (size) size.textContent = '~' + rec.size_gb + ' GB';
+      if (desc) desc.textContent = rec.desc;
+      if (why) why.textContent = rec.why_reason || 'Selected as optimal model for your preferences.';
+
+      window._recommendedModelName = rec.model;
+    }
+
+    function computeClientSideRecommendation(useCases, language) {
+      if (!availableCatalog || availableCatalog.length === 0) return;
+      const vram = currentHardware ? currentHardware.vram_gb : 0;
+      
+      let targetModel = 'qwen2.5-coder:7b';
+      if (useCases.includes('coding') && useCases.includes('reasoning')) {
+        targetModel = (vram >= 6) ? 'qwen2.5-coder:7b' : 'deepseek-r1:7b';
+      } else if (useCases.includes('coding')) {
+        targetModel = (vram >= 4) ? 'qwen2.5-coder:7b' : 'qwen2.5-coder:1.5b';
+      } else if (useCases.includes('reasoning')) {
+        targetModel = (vram >= 4) ? 'deepseek-r1:7b' : 'deepseek-r1:1.5b';
+      } else if (useCases.includes('vision')) {
+        targetModel = (vram >= 4) ? 'llava:7b' : 'moondream:1.8b';
+      } else if (useCases.includes('lightweight')) {
+        targetModel = 'smollm2:1.7b';
+      } else if (useCases.includes('enterprise')) {
+        targetModel = (vram >= 8) ? 'qwen2.5:14b' : 'qwen2.5:7b';
+      } else {
+        targetModel = (vram >= 4) ? 'qwen2.5:7b' : 'qwen2.5:1.5b';
+      }
+
+      const found = availableCatalog.find(m => m.name === targetModel) || availableCatalog[0];
+      if (found) {
+        applyRecommendationToWizardUI({
+          model: found.name,
+          label: found.label,
+          size_gb: found.size_gb,
+          desc: found.desc,
+          badge: `Recommended for ${useCases.join(', ')}`,
+          why_reason: `Optimal model for ${useCases.join(' + ')}${language !== 'English' ? ' in ' + language : ''}. Matches your detected physical hardware.`
+        });
+      }
+    }
+
+    function downloadWizardRecommendedModel() {
+      const modelName = window._recommendedModelName || 'qwen2.5-coder:7b';
+      const area = document.getElementById('wizardActionArea');
+      area.innerHTML = `
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs text-secondary font-mono">
+            <span id="wz-label">Initiating download...</span>
+            <span id="wz-pct" class="font-bold text-slate-200">0%</span>
+          </div>
+          <div class="w-full bg-[var(--bg-canvas)] rounded-full h-2.5 overflow-hidden border border-subtle">
+            <div id="wz-bar" class="h-full bg-gradient-to-r from-slate-200 to-slate-400 rounded-full progress-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="text-right pt-1">
+            <button onclick="cancelModelDownload('${modelName}', 'wizard')" class="px-3 py-1 btn-depth-secondary text-red-400 rounded text-xs font-semibold cursor-pointer">
+              Cancel Download
+            </button>
+          </div>
+        </div>
+      `;
+      executeModelDownload(modelName, 'wizard', (completed) => {
+        if (completed) {
+          area.innerHTML = '<div class="p-3 rounded-xl card-depth border border-emerald-500/30 text-emerald-400 font-bold text-xs text-center">Model Ready! Launching Workbench...</div>';
+          setTimeout(() => {
+            document.getElementById('mandatorySetupModal').classList.add('hidden');
+            renderModelDropdown();
+          }, 1200);
+        }
+      });
+    }
+
+    // ============================================================
+    // PROJECT WORKSPACES & SESSIONS PERSISTENCE
+    // ============================================================
+    async function loadProjectsFromBackend() {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        projects = data.projects || [];
+        renderProjectSelect();
+      } catch (err) {
+        console.error('Projects load:', err);
+      }
+    }
+
+    function renderProjectSelect() {
+      const sel = document.getElementById('projectSelect');
+      const badge = document.getElementById('projectCountBadge');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = '';
+
+      const allOpt = document.createElement('option');
+      allOpt.value = 'all';
+      allOpt.textContent = '\u25A0 All Conversations';
+      sel.appendChild(allOpt);
+
+      projects.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `\u25A0 ${p.name}`;
+        sel.appendChild(opt);
+      });
+
+      if (badge) badge.textContent = projects.length;
+
+      if (prev && [...sel.options].some(o => o.value === prev)) {
+        sel.value = prev;
+      }
+    }
+
+    function openNewProjectModal() {
+      const nameInput = document.getElementById('newProjectName');
+      const descInput = document.getElementById('newProjectDesc');
+      if (nameInput) nameInput.value = '';
+      if (descInput) descInput.value = '';
+      const modal = document.getElementById('projectModal');
+      if (modal) modal.classList.remove('hidden');
+      if (nameInput) nameInput.focus();
+    }
+
+    function closeNewProjectModal() {
+      const modal = document.getElementById('projectModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function saveNewProject() {
+      const nameInput = document.getElementById('newProjectName');
+      const descInput = document.getElementById('newProjectDesc');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const desc = descInput ? descInput.value.trim() : '';
+
+      if (!name) {
+        alert('Please enter a project name.');
+        return;
+      }
+
+      const newProj = {
+        id: 'proj_' + Date.now(),
+        name: name,
+        description: desc,
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        const resp = await fetch('/api/projects', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(newProj)
+        });
+        const data = await resp.json();
+        if (data.project) {
+          projects.push(data.project);
+          renderProjectSelect();
+          const sel = document.getElementById('projectSelect');
+          if (sel) sel.value = data.project.id;
+          closeNewProjectModal();
+          showToast(`Project created: ${name}`, 'folder');
+          createNewChatSession();
+        }
+      } catch (err) {
+        alert('Failed to save project: ' + err.message);
+      }
+    }
+
+    function onProjectSelectChange() {
+      renderSessionList();
+      const activeProj = document.getElementById('projectSelect') ? document.getElementById('projectSelect').value : 'all';
+      const filteredSessions = sessions.filter(s => {
+        if (activeProj === 'all') return true;
+        return (s.project_id === activeProj) || (!s.project_id && activeProj === 'proj_default');
+      });
+
+      if (filteredSessions.length > 0) {
+        if (!filteredSessions.some(s => s.id === currentSessionId)) {
+          selectSession(filteredSessions[0].id);
+        }
+      } else {
+        createNewChatSession();
+      }
+    }
+
+    async function loadSessionsFromBackend() {
+      try {
+        const res = await fetch('/api/sessions');
+        const data = await res.json();
+        sessions = data.sessions || [];
+        renderSessionList();
+
+        if (sessions.length > 0 && !currentSessionId) {
+          selectSession(sessions[0].id);
+        } else if (sessions.length === 0) {
+          createNewChatSession();
+        }
+      } catch (err) {
+        console.error('Sessions load:', err);
+      }
+    }
+
+    function renderSessionList() {
+      const container = document.getElementById('sessionList');
+      const badge = document.getElementById('sessionCountBadge');
+      if (!container || !badge) return;
+      container.innerHTML = '';
+
+      const activeProj = document.getElementById('projectSelect') ? document.getElementById('projectSelect').value : 'all';
+      const filteredSessions = sessions.filter(s => {
+        if (activeProj === 'all') return true;
+        return (s.project_id === activeProj) || (!s.project_id && activeProj === 'proj_default');
+      });
+
+      badge.textContent = filteredSessions.length;
+
+      if (filteredSessions.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'text-center py-6 px-2 text-[11px] text-muted font-sans';
+        emptyDiv.innerHTML = '<span>No chats in this workspace.</span><br><button onclick="createNewChatSession()" class="text-amber-500 hover:underline mt-1 font-semibold cursor-pointer">+ Start Chat</button>';
+        container.appendChild(emptyDiv);
+        return;
+      }
+
+      filteredSessions.forEach(s => {
+        const isActive = (s.id === currentSessionId);
+        const div = document.createElement('div');
+        div.className = `group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium cursor-pointer transition ${
+          isActive 
+            ? 'session-pill-active font-semibold' 
+            : 'text-secondary hover:bg-white/[0.04] hover:text-primary'
+        }`;
+        div.onclick = () => selectSession(s.id);
+        div.innerHTML = `
+          <div class="flex items-center gap-2 truncate flex-1">
+            <span class="truncate">${esc(s.title || 'Untitled Session')}</span>
+          </div>
+          <button onclick="event.stopPropagation(); deleteSession('${s.id}')" class="opacity-0 group-hover:opacity-100 text-muted hover:text-red-400 px-1 transition text-xs cursor-pointer" title="Delete Session">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function createNewChatSession() {
+      const activeProj = document.getElementById('projectSelect') ? document.getElementById('projectSelect').value : 'all';
+
+      // 1. If currently active session has 0 messages, stay on it and focus input (prevent duplicate blank chats)
+      if (currentSessionMessages && currentSessionMessages.length === 0) {
+        const cur = sessions.find(s => s.id === currentSessionId);
+        if (cur && (activeProj === 'all' || cur.project_id === activeProj || (!cur.project_id && activeProj === 'proj_default'))) {
+          const input = document.getElementById('chatInput');
+          if (input) input.focus();
+          return;
+        }
+      }
+
+      // 2. Check if any existing session in the current project scope has 0 messages
+      const emptyExisting = sessions.find(s => {
+        const matchesProj = (activeProj === 'all' || s.project_id === activeProj || (!s.project_id && activeProj === 'proj_default'));
+        return matchesProj && (!s.messages || s.messages.length === 0);
+      });
+
+      if (emptyExisting) {
+        selectSession(emptyExisting.id);
+        const input = document.getElementById('chatInput');
+        if (input) input.focus();
+        return;
+      }
+
+      // 3. Otherwise create a brand new session
+      const newId = 'session_' + Date.now();
+      const targetProjId = (activeProj !== 'all') ? activeProj : (projects.length > 0 ? projects[0].id : 'proj_default');
+      const newSession = {
+        id: newId,
+        project_id: targetProjId,
+        title: 'New Chat Session',
+        created_at: new Date().toISOString(),
+        messages: []
+      };
+      sessions.unshift(newSession);
+      currentSessionId = newId;
+      currentSessionMessages = [];
+      renderSessionList();
+      renderChatMessages();
+      saveCurrentSessionToBackend();
+
+      const input = document.getElementById('chatInput');
+      if (input) input.focus();
+    }
+
+    function selectSession(id) {
+      currentSessionId = id;
+      const s = sessions.find(item => item.id === id);
+      currentSessionMessages = s ? (s.messages || []) : [];
+      renderSessionList();
+      renderChatMessages();
+    }
+
+    async function deleteSession(id) {
+      sessions = sessions.filter(s => s.id !== id);
+      await fetch('/api/sessions?id=' + encodeURIComponent(id), { method: 'DELETE' });
+      if (currentSessionId === id) {
+        const activeProj = document.getElementById('projectSelect') ? document.getElementById('projectSelect').value : 'all';
+        const remainingInProj = sessions.filter(s => {
+          if (activeProj === 'all') return true;
+          return (s.project_id === activeProj) || (!s.project_id && activeProj === 'proj_default');
+        });
+        if (remainingInProj.length > 0) selectSession(remainingInProj[0].id);
+        else createNewChatSession();
+      } else {
+        renderSessionList();
+      }
+    }
+
+    async function saveCurrentSessionToBackend() {
+      if (!currentSessionId) return;
+      const s = sessions.find(item => item.id === currentSessionId);
+      if (s) {
+        s.messages = currentSessionMessages;
+        if (currentSessionMessages.length > 0 && s.title === 'New Chat Session') {
+          const firstUser = currentSessionMessages.find(m => m.role === 'user');
+          if (firstUser) {
+            s.title = firstUser.content.slice(0, 28) + (firstUser.content.length > 28 ? '...' : '');
+          }
+        }
+        await fetch('/api/sessions', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(s)
+        });
+        renderSessionList();
+      }
+    }
+
+    // ============================================================
+    // CHAT RENDERING, COPY BUTTONS & FILE ATTACHMENTS
+    // ============================================================
+    function scrollChatToBottom() {
+      const scroller = document.getElementById('chatScrollContainer') || document.getElementById('chatContainer');
+      if (scroller) {
+        scroller.scrollTop = scroller.scrollHeight;
+      }
+    }
+
+    function renderChatMessages() {
+      const container = document.getElementById('chatContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (currentSessionMessages.length === 0) {
+        container.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center p-8 space-y-6 select-none my-auto">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-b from-white/15 to-transparent border border-white/10 flex items-center justify-center p-3 shadow-xl">
+              <img src="/icon.png" class="w-8 h-8 object-contain">
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-base font-bold text-primary">Sovereign AI Local Workbench</h3>
+              <p class="text-xs text-secondary max-w-md mx-auto leading-relaxed">
+                Air-gapped local AI assistant for engineering, code automation, telemetry analysis, and structured report synthesis.
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5 max-w-xl w-full text-left">
+              <button onclick="sendPresetPrompt(1)" class="card-depth-interactive p-3.5 rounded-2xl text-xs space-y-1 cursor-pointer">
+                <div class="font-bold text-primary">Telemetry Audit</div>
+                <div class="text-[11px] text-muted">Audit refinery telemetry against industrial standards &amp; limits.</div>
+              </button>
+              <button onclick="sendPresetPrompt(2)" class="card-depth-interactive p-3.5 rounded-2xl text-xs space-y-1 cursor-pointer">
+                <div class="font-bold text-emerald-400">Automation Script</div>
+                <div class="text-[11px] text-muted">Generate Python automation scripts for process monitoring.</div>
+              </button>
+              <button onclick="sendPresetPrompt(3)" class="card-depth-interactive p-3.5 rounded-2xl text-xs space-y-1 cursor-pointer">
+                <div class="font-bold text-cyan-400">P&amp;ID Schematic</div>
+                <div class="text-[11px] text-muted">Analyze engineering specifications and safety valve tolerances.</div>
+              </button>
+              <button onclick="sendPresetPrompt(4)" class="card-depth-interactive p-3.5 rounded-2xl text-xs space-y-1 cursor-pointer">
+                <div class="font-bold text-slate-300">Tariff &amp; Economics</div>
+                <div class="text-[11px] text-muted">Compile crude shipment tariff calculation &amp; margin analysis.</div>
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      currentSessionMessages.forEach(msg => {
+        if (msg.role === 'user') {
+          appendUserBubble(msg.content, msg.file_name);
+        } else if (msg.role === 'assistant') {
+          appendAiBubble(msg.content, msg.model, msg.routed_info);
+        }
+      });
+      scrollChatToBottom();
+    }
+
+    function appendUserBubble(text, fileName) {
+      const container = document.getElementById('chatContainer');
+      if (!container) return;
+      const div = document.createElement('div');
+      div.className = 'flex justify-end mb-4 group/user';
+      const fileTag = fileName ? `<div class="text-[11px] font-mono text-slate-300 mb-1 flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded border border-white/10"><svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg> ${esc(fileName)}</div>` : '';
+      
+      const userMsgId = 'usr_msg_' + Math.random().toString(36).substr(2, 9);
+      window._rawMessageStore[userMsgId] = text;
+
+      div.innerHTML = `
+        <div class="chat-bubble-user p-4 max-w-2xl text-xs leading-relaxed shadow-md relative group">
+          ${fileTag}
+          <div class="whitespace-pre-wrap leading-relaxed text-slate-100">${esc(text)}</div>
+          <div class="flex items-center justify-end gap-1.5 mt-2 pt-1.5 border-t border-white/10 opacity-70 group-hover:opacity-100 transition">
+            <button onclick="copyUserPrompt(this, '${userMsgId}')" class="px-2 py-0.5 rounded-lg btn-depth-secondary text-[10px] text-slate-300 hover:text-white transition flex items-center gap-1 cursor-pointer font-sans" title="Copy Prompt">
+              <span class="copy-icon"></span>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      scrollChatToBottom();
+    }
+
+    function appendModelSwitchPill(modelName) {
+      const container = document.getElementById('chatContainer');
+      if (!container) return;
+      const div = document.createElement('div');
+      div.className = 'flex justify-center my-3';
+      const label = modelName === '__AUTO__' ? 'Auto (Smart Model Router)' : modelName;
+      div.innerHTML = `
+        <div class="px-3.5 py-1 rounded-full card-depth text-secondary text-[11px] font-mono flex items-center gap-2 shadow-sm border border-white/10">
+          <span>Active AI: <strong class="text-slate-200 font-bold">${esc(label)}</strong> &bull; Conversation memory preserved</span>
+        </div>
+      `;
+      container.appendChild(div);
+      scrollChatToBottom();
+    }
+
+    function appendAiBubble(text, model, routedInfo) {
+      const container = document.getElementById('chatContainer');
+      if (!container) return;
+      const div = document.createElement('div');
+      div.className = 'flex justify-start mb-4';
+      const msgId = 'ai_msg_' + Math.random().toString(36).substr(2, 9);
+      window._rawMessageStore[msgId] = text;
+
+      const formattedText = (typeof marked !== 'undefined' && marked.parse) ? marked.parse(text) : esc(text);
+
+      const routedBadge = routedInfo ? `
+        <span class="px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-slate-200 text-[10px] font-mono font-medium flex items-center gap-1">
+          ${esc(routedInfo)}
+        </span>
+      ` : '';
+
+      div.innerHTML = `
+        <div class="chat-bubble-ai p-5 max-w-3xl text-xs leading-relaxed shadow-md font-sans w-full border border-white/10">
+          <div class="flex items-center justify-between border-b border-subtle pb-2 mb-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <div class="w-5 h-5 rounded-lg bg-gradient-to-b from-white/15 to-transparent border border-white/10 p-0.5 shrink-0">
+                <div class="w-full h-full bg-[#0c1017] rounded-[5px] flex items-center justify-center p-0.5">
+                  <img src="/icon.png" class="w-3.5 h-3.5 object-contain">
+                </div>
+              </div>
+              <span class="text-primary font-bold">${esc(model || 'Sovereign AI')}</span>
+              ${routedBadge}
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="copyAiMessage(this, '${msgId}')" class="px-2 py-1 btn-depth-secondary rounded-lg text-[10px] text-secondary hover:text-primary transition flex items-center gap-1 cursor-pointer font-sans" title="Copy Response to Clipboard">
+                <span class="copy-icon"></span>
+                <span class="copy-label">Copy</span>
+              </button>
+              <button onclick="exportAiMessage('${msgId}', 'pdf')" class="px-2 py-1 btn-depth-secondary rounded-lg text-[10px] text-secondary hover:text-primary transition flex items-center gap-1 cursor-pointer" title="Download as PDF Report">
+                <span>PDF</span>
+              </button>
+              <button onclick="exportAiMessage('${msgId}', 'docx')" class="px-2 py-1 btn-depth-secondary rounded-lg text-[10px] text-secondary hover:text-primary transition flex items-center gap-1 cursor-pointer" title="Download as Word Docx">
+                <span>Word</span>
+              </button>
+              <button onclick="exportAiMessage('${msgId}', 'txt')" class="px-2 py-1 btn-depth-secondary rounded-lg text-[10px] text-secondary hover:text-primary transition flex items-center gap-1 cursor-pointer" title="Download as Text">
+                <span>Text</span>
+              </button>
+            </div>
+          </div>
+          <div class="ai-markdown text-primary leading-relaxed">${formattedText}</div>
+        </div>
+      `;
+      container.appendChild(div);
+      scrollChatToBottom();
+    }
+
+    function copyUserPrompt(btn, msgId) {
+      const text = window._rawMessageStore[msgId] || '';
+      if (!text) return;
+      copyTextWithFeedback(text, btn, 'Prompt copied to clipboard');
+    }
+
+    function copyAiMessage(btn, msgId) {
+      const text = window._rawMessageStore[msgId] || '';
+      if (!text) return;
+      copyTextWithFeedback(text, btn, 'Response copied to clipboard');
+    }
+
+    function copyTextWithFeedback(text, btn, toastMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          applyCopyFeedback(btn, toastMsg);
+        }).catch(() => {
+          fallbackCopyText(text);
+          applyCopyFeedback(btn, toastMsg);
+        });
+      } else {
+        fallbackCopyText(text);
+        applyCopyFeedback(btn, toastMsg);
+      }
+    }
+
+    function applyCopyFeedback(btn, toastMsg) {
+      const icon = btn.querySelector('.copy-icon');
+      const label = btn.querySelector('.copy-label');
+      if (icon) icon.innerHTML = '<svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+      if (label) label.textContent = 'Copied!';
+      btn.classList.add('text-emerald-400', 'border-emerald-500/40');
+      showToast(toastMsg || 'Copied to clipboard', 'clipboard');
+      setTimeout(() => {
+        if (icon) icon.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-1M16 3h2a2 2 0 012 2v2M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2z"/></svg>';
+        if (label) label.textContent = 'Copy';
+        btn.classList.remove('text-emerald-400', 'border-emerald-500/40');
+      }, 2000);
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try { document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(textArea);
+    }
+
+    async function exportAiMessage(msgId, format) {
+      const text = window._rawMessageStore[msgId];
+      if (!text) {
+        alert('Could not locate response content for export.');
+        return;
+      }
+      try {
+        showToast(`Generating ${format.toUpperCase()} report...`, 'clock');
+        const resp = await fetch('/api/export_doc', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ text: text, format: format, title: "Sovereign AI Engineering Report" })
+        });
+        const data = await resp.json();
+        if (data.download_url) {
+          const a = document.createElement('a');
+          a.href = data.download_url;
+          a.download = data.filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          showToast(`Report saved: ${data.filename}`, 'check');
+        } else {
+          alert('Export failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Export error: ' + err.message);
+      }
+    }
+
+    function handleFilePicked(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      attachedFile = file;
+
+      const previewBar = document.getElementById('filePreviewBar');
+      document.getElementById('filePreviewName').textContent = file.name;
+      document.getElementById('filePreviewSize').textContent = `(${Math.round(file.size / 1024)} KB)`;
+      previewBar.classList.remove('hidden');
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        attachedFileContent = e.target.result;
+      };
+      if (file.name.match(/\.(txt|md|py|js|ts|json|csv|log|html|css|cpp|c|h|java|sql|yaml|xml|ini)$/i)) {
+        reader.readAsText(file);
+      } else {
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removeAttachedFile() {
+      attachedFile = null;
+      attachedFileContent = null;
+      const filePicker = document.getElementById('filePicker');
+      if (filePicker) filePicker.value = '';
+      const previewBar = document.getElementById('filePreviewBar');
+      if (previewBar) previewBar.classList.add('hidden');
+    }
+
+    function handleSendOrStopClick() {
+      if (chatAbortController) {
+        stopChatMessageGeneration();
+      } else {
+        sendChatMessage();
+      }
+    }
+
+    function setGeneratingState(isGenerating) {
+      const btn = document.getElementById('sendOrStopBtn');
+      const input = document.getElementById('chatInput');
+
+      if (isGenerating) {
+        btn.innerHTML = '<span class="w-3 h-3 bg-red-950 rounded-sm"></span>';
+        btn.className = 'w-9 h-9 rounded-xl bg-red-500 hover:bg-red-400 text-slate-950 font-extrabold flex items-center justify-center transition shadow-lg shrink-0 cursor-pointer';
+        btn.title = 'Stop Generating Response';
+        if (input) input.disabled = true;
+      } else {
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>';
+        btn.className = 'w-9 h-9 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-extrabold flex items-center justify-center transition shadow-lg shrink-0 cursor-pointer';
+        btn.title = 'Send Prompt';
+        if (input) {
+          input.disabled = false;
+          input.focus();
+        }
+      }
+    }
+
+    function stopChatMessageGeneration() {
+      if (chatAbortController) {
+        chatAbortController.abort();
+        chatAbortController = null;
+      }
+      setGeneratingState(false);
+      const loader = document.getElementById('activeThinkingLoader');
+      if (loader) loader.remove();
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text && !attachedFile) return;
+
+      const modelSelect = document.getElementById('modelSelect');
+      let model = modelSelect ? modelSelect.value : '__AUTO__';
+
+      if (!model || model === '') {
+        model = '__AUTO__';
+      }
+
+      if (serverConfig.type === 'local' && installedModels.size === 0 && model !== '__AUTO__') {
+        appendNoModelWarningBubble();
+        return;
+      }
+
+      input.value = '';
+      const fileName = attachedFile ? attachedFile.name : null;
+      const fileContent = attachedFileContent;
+
+      const userMsg = { role: 'user', content: text, file_name: fileName, file_content: fileContent };
+      currentSessionMessages.push(userMsg);
+      appendUserBubble(text, fileName);
+
+      // MINIMALIST THINKING PULSE (Gemini / Claude Style)
+      const container = document.getElementById('chatContainer');
+      const thinkDiv = document.createElement('div');
+      thinkDiv.className = 'flex justify-start mb-4';
+      thinkDiv.id = 'activeThinkingLoader';
+      thinkDiv.innerHTML = `
+        <div class="card-depth px-4 py-3 rounded-2xl max-w-xs flex items-center gap-3 shadow-md border border-white/10">
+          <div class="relative flex items-center justify-center">
+            <img src="/icon.png" class="w-5 h-5 object-contain opacity-80 animate-pulse">
+          </div>
+          <div class="flex items-center gap-1.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce" style="animation-delay: 0s"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay: 0.15s"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce" style="animation-delay: 0.3s"></span>
+          </div>
+        </div>
+      `;
+      container.appendChild(thinkDiv);
+      scrollChatToBottom();
+
+      removeAttachedFile();
+      setGeneratingState(true);
+
+      chatAbortController = new AbortController();
+
+      try {
+        const resp = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            messages: currentSessionMessages,
+            model: model,
+            file_name: fileName,
+            file_content: fileContent,
+            server_config: serverConfig
+          }),
+          signal: chatAbortController.signal
+        });
+        const data = await resp.json();
+        thinkDiv.remove();
+
+        const aiText = data.llm_output || 'No output returned by AI server.';
+        const actualModel = data.active_model || (model === '__AUTO__' ? 'Auto-Routed AI' : model);
+        const routedInfo = data.routed_info || null;
+
+        currentSessionMessages.push({ role: 'assistant', content: aiText, model: actualModel, routed_info: routedInfo });
+        appendAiBubble(aiText, actualModel, routedInfo);
+        saveCurrentSessionToBackend();
+      } catch (err) {
+        thinkDiv.remove();
+        if (err.name === 'AbortError') {
+          const stoppedText = `*Response generation stopped by user.*`;
+          currentSessionMessages.push({ role: 'assistant', content: stoppedText, model: model });
+          appendAiBubble(stoppedText, model);
+          saveCurrentSessionToBackend();
+        } else {
+          const errorText = '**Connection Error**: Could not connect to AI engine. Please ensure Ollama is running or server settings are configured.';
+          currentSessionMessages.push({ role: 'assistant', content: errorText, model: model });
+          appendAiBubble(errorText, model);
+          saveCurrentSessionToBackend();
+        }
+      } finally {
+        chatAbortController = null;
+        setGeneratingState(false);
+      }
+    }
+
+    function appendNoModelWarningBubble() {
+      const container = document.getElementById('chatContainer');
+      const div = document.createElement('div');
+      div.className = 'flex justify-start mb-4';
+      div.innerHTML = `
+        <div class="card-depth p-5 max-w-xl text-xs leading-relaxed shadow-md font-sans border border-white/10 rounded-2xl space-y-3">
+          <div class="flex items-center gap-2 text-slate-100 font-bold text-sm">
+            <span>No AI Model Installed or Selected</span>
+          </div>
+          <p class="text-secondary">Please download a local model or configure a remote server to start chatting.</p>
+          <button onclick="openModelHubModal()" class="px-4 py-2 btn-depth-action rounded-xl text-xs transition flex items-center gap-1.5 cursor-pointer">
+            <span>Open Model Hub</span>
+          </button>
+        </div>
+      `;
+      container.appendChild(div);
+      scrollChatToBottom();
+    }
+
+    // ============================================================
+    // MODELS MANAGEMENT & MODEL HUB MODAL
+    // ============================================================
+    async function refreshLocalModels() {
+      try {
+        const res = await fetch('/api/local_models');
+        const d = await res.json();
+        installedModels.clear();
+        (d.models || []).forEach(m => installedModels.add(m.name));
+        renderModelDropdown();
+        renderModelHubList();
+      } catch (e) {}
+    }
+
+    function renderModelDropdown() {
+      const sel = document.getElementById('modelSelect');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = '';
+
+      if (availableCatalog.length === 0 && installedModels.size === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '\u26A0 No local models installed';
+        sel.appendChild(opt);
+        return;
+      }
+
+      // 1. Auto Smart Router Group
+      const autoGroup = document.createElement('optgroup');
+      autoGroup.label = '\u25B8 Dynamic Auto-Router';
+      const autoOpt = document.createElement('option');
+      autoOpt.value = '__AUTO__';
+      autoOpt.textContent = '\u25C6 Auto (Smart Model Router)';
+      autoGroup.appendChild(autoOpt);
+      sel.appendChild(autoGroup);
+
+      const installedGroup = document.createElement('optgroup');
+      installedGroup.label = '\u25CF Installed on this Device';
+
+      const availableGroup = document.createElement('optgroup');
+      availableGroup.label = '\u25BD Available to Download';
+
+      availableCatalog.forEach(m => {
+        const isInst = installedModels.has(m.name);
+        const opt = document.createElement('option');
+        opt.value = m.name;
+        const icon = isInst ? '\u25CF' : '\u25BD';
+        opt.textContent = `${icon} ${m.label} (${m.status_badge || 'Available'})`;
+        if (isInst) installedGroup.appendChild(opt);
+        else availableGroup.appendChild(opt);
+      });
+
+      if (installedGroup.children.length > 0) sel.appendChild(installedGroup);
+      if (availableGroup.children.length > 0) sel.appendChild(availableGroup);
+
+      // Add Model Hub Shortcut at bottom of dropdown
+      const actionGroup = document.createElement('optgroup');
+      actionGroup.label = '──────────────';
+      const hubOpt = document.createElement('option');
+      hubOpt.value = '__OPEN_HUB__';
+      hubOpt.textContent = 'Download More Models (Open Hub)...';
+      actionGroup.appendChild(hubOpt);
+      sel.appendChild(actionGroup);
+
+      let bestChoice = '__AUTO__';
+      if (prev && prev !== '__OPEN_HUB__' && [...sel.options].some(o => o.value === prev)) {
+        bestChoice = prev;
+      } else if (serverConfig && serverConfig.last_used_model && (serverConfig.last_used_model === '__AUTO__' || installedModels.has(serverConfig.last_used_model))) {
+        bestChoice = serverConfig.last_used_model;
+      } else if (installedModels.size > 0) {
+        bestChoice = '__AUTO__';
+      }
+
+      if (bestChoice && [...sel.options].some(o => o.value === bestChoice)) {
+        sel.value = bestChoice;
+      }
+    }
+
+    function onModelDropdownChange() {
+      const sel = document.getElementById('modelSelect');
+      if (!sel || !sel.value) return;
+
+      const chosen = sel.value;
+
+      if (chosen === '__OPEN_HUB__') {
+        openModelHubModal();
+        renderModelDropdown();
+        return;
+      }
+
+      if (chosen === '__AUTO__') {
+        serverConfig.last_used_model = '__AUTO__';
+        saveActiveServerConfig();
+        if (currentSessionMessages.length > 0) {
+          appendModelSwitchPill('__AUTO__');
+        }
+        return;
+      }
+
+      if (!installedModels.has(chosen) && serverConfig.type === 'local') {
+        openModelHubModal();
+        const safeId = chosen.replace(/[^a-zA-Z0-9]/g, '_');
+        startHubModelDownload(chosen, safeId);
+        return;
+      }
+
+      serverConfig.last_used_model = chosen;
+      saveActiveServerConfig();
+      if (currentSessionMessages.length > 0) {
+        appendModelSwitchPill(chosen);
+      }
+      fetch('/api/switch_model', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ model: chosen })
+      }).catch(() => {});
+    }
+
+    async function openModelHubModal() {
+      const modal = document.getElementById('modelHubModal');
+      if (modal) modal.classList.remove('hidden');
+
+      if (!availableCatalog || availableCatalog.length === 0) {
+        await refreshHardwareAndUI();
+      }
+      await refreshLocalModels();
+      renderModelHubList();
+    }
+
+    function closeModelHubModal() {
+      const modal = document.getElementById('modelHubModal');
+      if (modal) modal.classList.add('hidden');
+      checkMandatorySetupRequirement();
+    }
+
+    function openServerConfigModal() {
+      loadServerConfig();
+      const modal = document.getElementById('serverConfigModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeServerConfigModal() {
+      const modal = document.getElementById('serverConfigModal');
+      if (modal) modal.classList.add('hidden');
+      checkMandatorySetupRequirement();
+    }
+
+    function selectModelCategory(cat) {
+      activeCategoryFilter = cat;
+      const btns = document.querySelectorAll('.cat-pill');
+      btns.forEach(b => {
+        if (b.getAttribute('data-cat') === cat) {
+          b.className = "cat-pill px-3 py-1 rounded-full text-[11px] font-semibold transition session-pill-active cursor-pointer";
+        } else {
+          b.className = "cat-pill px-3 py-1 rounded-full text-[11px] font-medium transition bg-[var(--bg-canvas)] hover:bg-[var(--bg-surface-hover)] border border-subtle text-secondary cursor-pointer";
+        }
+      });
+      renderModelHubList();
+    }
+
+    function filterModelHubList() {
+      renderModelHubList();
+    }
+
+    function renderModelHubList() {
+      const container = document.getElementById('modelHubList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!availableCatalog || availableCatalog.length === 0) {
+        container.innerHTML = '<div class="text-muted text-xs text-center p-6 font-mono">Loading model catalog...</div>';
+        return;
+      }
+
+      const searchInput = document.getElementById('modelSearchInput');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      const filtered = availableCatalog.filter(m => {
+        try {
+          const isInstalled = installedModels.has(m.name);
+
+          // Category filter
+          if (activeCategoryFilter === 'installed' && !isInstalled) return false;
+          if (activeCategoryFilter === 'popular' && !(m.tags && m.tags.includes('Popular'))) return false;
+          if (activeCategoryFilter !== 'all' && activeCategoryFilter !== 'installed' && activeCategoryFilter !== 'popular') {
+            if (m.category !== activeCategoryFilter && !(m.tags && m.tags.includes(activeCategoryFilter))) return false;
+          }
+
+          // Search query filter
+          if (query) {
+            const matchName = String(m.name || '').toLowerCase().includes(query);
+            const matchLabel = String(m.label || '').toLowerCase().includes(query);
+            const matchDesc = String(m.desc || '').toLowerCase().includes(query);
+            const matchCat = String(m.category || '').toLowerCase().includes(query);
+            const matchTags = (m.tags || []).some(t => String(t).toLowerCase().includes(query));
+            return matchName || matchLabel || matchDesc || matchCat || matchTags;
+          }
+
+          return true;
+        } catch(e) {
+          return true;
+        }
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-muted font-sans space-y-2">
+            <svg class="w-8 h-8 text-muted mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <div class="font-bold text-sm text-primary">No models found matching "${esc(query)}"</div>
+            <p class="text-xs text-secondary">Try searching for "coding", "reasoning", "1.5b", "7b", or pull a custom tag below.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(m => {
+        try {
+          const isInstalled = installedModels.has(m.name);
+          const card = document.createElement('div');
+          card.className = 'p-4 rounded-2xl card-depth-interactive flex flex-col md:flex-row md:items-center justify-between gap-4 transition border border-subtle';
+          const safeId = String(m.name).replace(/[^a-zA-Z0-9]/g, '_');
+
+          const tagBadges = (m.tags || []).map(t => `<span class="text-[10px] px-2 py-0.5 rounded-lg bg-[var(--bg-canvas)] text-primary font-medium border border-subtle">${esc(t)}</span>`).join(' ');
+
+          const isCurrentlyDownloading = activeDownloads[m.name];
+
+          let btnHtml = '';
+          if (isCurrentlyDownloading) {
+            btnHtml = `
+              <div class="flex items-center gap-2">
+                <div class="w-36 sm:w-44">
+                  <div class="flex justify-between text-[10px] text-muted mb-1 font-mono">
+                    <span id="dl-lbl-${safeId}" class="truncate max-w-[95px]">Downloading...</span>
+                    <span id="dl-pct-${safeId}" class="font-bold text-primary">0%</span>
+                  </div>
+                  <div class="w-full bg-[var(--bg-canvas)] rounded-full h-2 overflow-hidden border border-subtle">
+                    <div id="dl-bar-${safeId}" class="h-full bg-gradient-to-r from-slate-200 to-slate-400 rounded-full progress-bar-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+                <button onclick="cancelModelDownload('${esc(m.name)}', '${safeId}')" class="px-2 py-1 btn-depth-secondary text-red-400 rounded-lg text-xs cursor-pointer" title="Cancel Download"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+              </div>
+            `;
+          } else if (isInstalled) {
+            btnHtml = `
+              <div class="flex items-center gap-2">
+                <span class="text-emerald-400 font-medium text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/30 border border-emerald-500/20 shadow-sm">Installed</span>
+                <button onclick="deleteInstalledModel('${esc(m.name)}')" class="px-3 py-1.5 btn-depth-secondary text-red-400 rounded-xl text-xs font-medium transition cursor-pointer" title="Remove model from disk">Delete</button>
+              </div>
+            `;
+          } else {
+            btnHtml = `<button onclick="startHubModelDownload('${esc(m.name)}', '${safeId}')" class="px-4 py-2 btn-depth-action rounded-xl font-bold transition text-xs shadow-md whitespace-nowrap cursor-pointer">Download</button>`;
+          }
+
+          card.innerHTML = `
+            <div class="flex-1 space-y-2">
+              <!-- TOP: Title + Specialty/Focus Badge + Hardware Specs -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-primary text-sm sm:text-base">${esc(m.label)}</span>
+                <span class="text-[10px] px-2.5 py-0.5 rounded-full font-mono font-semibold session-pill-active border border-subtle">
+                  ${esc(m.status_badge || m.category || 'General AI')}
+                </span>
+                <span class="text-[10px] px-2.5 py-0.5 rounded-full font-mono bg-[var(--bg-canvas)] text-secondary border border-subtle flex items-center gap-1.5">
+                  <svg class="w-3 h-3 text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
+                  Disk: ~${esc(m.size_gb)} GB &nbsp;•&nbsp;
+                  <svg class="w-3 h-3 text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                  RAM/VRAM: ${esc(m.est_mem_gb || m.size_gb)} GB
+                </span>
+              </div>
+
+              <!-- MAIN TOPIC / DESCRIPTION -->
+              <p class="text-xs text-secondary leading-relaxed font-normal">${esc(m.desc)}</p>
+
+              <!-- FEATURES & CAPABILITIES CHIPS -->
+              <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+                <span class="text-[10px] font-semibold text-muted tracking-wider uppercase mr-1">Capabilities:</span>
+                ${tagBadges}
+                ${m.recommended_reason ? `
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/30 px-2 py-0.5 rounded-lg border border-emerald-500/20 ml-1 flex items-center gap-1">
+                    <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                    ${esc(m.recommended_reason)}
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+            <div id="hub-btn-area-${safeId}" class="shrink-0 flex items-center md:self-center">
+              ${btnHtml}
+            </div>
+          `;
+          container.appendChild(card);
+        } catch(err) {
+          console.error('Model card render error:', err);
+        }
+      });
+    }
+
+    function downloadCustomModel() {
+      const input = document.getElementById('customModelInput');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+
+      if (!availableCatalog.some(m => m.name === val)) {
+        availableCatalog.unshift({
+          name: val,
+          label: val,
+          params: 'Custom',
+          size_gb: 'Dynamic',
+          status_badge: 'Custom Pull',
+          desc: 'Custom model specified from Ollama Library registry.',
+          tags: ['Custom']
+        });
+      }
+      renderModelDropdown();
+      renderModelHubList();
+      const safeId = val.replace(/[^a-zA-Z0-9]/g, '_');
+      startHubModelDownload(val, safeId);
+    }
+
+    async function deleteInstalledModel(modelName) {
+      if (!confirm(`Are you sure you want to remove "${modelName}" from local disk?`)) return;
+      try {
+        await fetch('/api/delete_model', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ model: modelName })
+        });
+        installedModels.delete(modelName);
+        await refreshLocalModels();
+        checkMandatorySetupRequirement();
+        showToast(`Model ${modelName} removed`);
+      } catch (e) {
+        alert('Could not delete model: ' + e.message);
+      }
+    }
+
+    function startHubModelDownload(modelName, safeId) {
+      const btnArea = document.getElementById('hub-btn-area-' + safeId);
+      if (!btnArea) return;
+
+      btnArea.innerHTML = `
+        <div class="flex items-center gap-2">
+          <div class="w-40">
+            <div class="flex justify-between text-[10px] text-muted mb-1 font-mono">
+              <span id="dl-lbl-${safeId}" class="truncate max-w-[95px]">Starting...</span>
+              <span id="dl-pct-${safeId}" class="font-bold text-slate-200">0%</span>
+            </div>
+            <div class="w-full bg-[var(--bg-canvas)] rounded-full h-2 overflow-hidden border border-subtle">
+              <div id="dl-bar-${safeId}" class="h-full bg-gradient-to-r from-slate-200 to-slate-400 rounded-full progress-bar-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button onclick="cancelModelDownload('${esc(modelName)}', '${safeId}')" class="px-2 py-1 btn-depth-secondary text-red-400 rounded text-xs cursor-pointer" title="Cancel Download"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+      `;
+
+      executeModelDownload(modelName, safeId, (completed) => {
+        renderModelHubList();
+        renderModelDropdown();
+        if (completed) {
+          showToast(`Model ${modelName} installed!`);
+          checkMandatorySetupRequirement();
+        }
+      });
+    }
+
+    function cancelModelDownload(modelName, safeId) {
+      fetch('/api/cancel_pull', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ model: modelName })
+      }).catch(() => {});
+
+      if (activeDownloads[modelName]) {
+        activeDownloads[modelName].abort();
+        delete activeDownloads[modelName];
+      }
+
+      showToast(`Cancelled download of ${modelName}`, '⏹️');
+      renderModelHubList();
+    }
+
+    async function executeModelDownload(modelName, safeId, onFinish) {
+      const isWizard = (safeId === 'wizard');
+      const barElem = document.getElementById(isWizard ? 'wz-bar' : `dl-bar-${safeId}`);
+      const pctElem = document.getElementById(isWizard ? 'wz-pct' : `dl-pct-${safeId}`);
+      const lblElem = document.getElementById(isWizard ? 'wz-label' : `dl-lbl-${safeId}`);
+
+      const controller = new AbortController();
+      activeDownloads[modelName] = controller;
+
+      try {
+        const resp = await fetch('/api/pull_model?model=' + encodeURIComponent(modelName), {
+          signal: controller.signal
+        });
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const data = JSON.parse(line);
+              if (data.status === 'cancelled') {
+                delete activeDownloads[modelName];
+                if (onFinish) onFinish(false);
+                return;
+              }
+              if (data.error) {
+                alert('Download Error: ' + data.error);
+                delete activeDownloads[modelName];
+                if (onFinish) onFinish(false);
+                return;
+              }
+
+              if (lblElem && data.status) {
+                lblElem.textContent = data.status;
+              }
+
+              if (data.total && data.completed) {
+                const pct = Math.min(100, Math.round((data.completed / data.total) * 100));
+                if (barElem) barElem.style.width = pct + '%';
+                if (pctElem) pctElem.textContent = pct + '%';
+              }
+            } catch (e) {}
+          }
+        }
+
+        installedModels.add(modelName);
+        delete activeDownloads[modelName];
+        if (onFinish) onFinish(true);
+      } catch (err) {
+        delete activeDownloads[modelName];
+        if (err.name !== 'AbortError') {
+          console.error('Download fetch failed:', err);
+        }
+        if (onFinish) onFinish(false);
+      }
+    }
+
+    // ============================================================
+    // BACKGROUND HEALTH POLLING
+    // ============================================================
+    function startStatusPolling() {
+      setInterval(async () => {
+        try {
+          const res = await fetch('/api/ollama_status');
+          const d = await res.json();
+          const dot = document.getElementById('engineDot');
+          const txt = document.getElementById('engineStatus');
+          if (dot && txt) {
+            if (d.running) {
+              dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow';
+              txt.textContent = 'Ready (Ollama running)';
+            } else {
+              dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 shadow';
+              txt.textContent = d.message || 'Connecting...';
+            }
+          }
+        } catch (e) {}
+      }, 5000);
+    }
+
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendOrStopClick();
+      }
+    }
+
+    function sendPresetPrompt(id) {
+      const input = document.getElementById('chatInput');
+      if (id === 1) input.value = 'Read Hydrocracker Unit-4 operational telemetry log (P=142.5 bar, T=410°C). Audit pressure limit against MRPL SOP-HC-2024 and generate a formal inspection note.';
+      else if (id === 2) input.value = 'Write a Python control script to poll crude oil storage tank telemetry and trigger cooling bypass valve V-402 if temperature exceeds 65°C.';
+      else if (id === 3) input.value = 'Parse scanned P&ID engineering drawing to extract Relief Valve PSV-102A specifications against refinery SOP.';
+      else if (id === 4) input.value = 'Compile crude shipment tariff calculation spreadsheet with ocean freight, berth fees, and refinery margin analysis.';
+      sendChatMessage();
+    }
+
+    // SAFE ESCAPE HELPER (Handles strings, numbers, booleans, null, undefined)
+    function esc(s) {
+      if (s === null || s === undefined) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
