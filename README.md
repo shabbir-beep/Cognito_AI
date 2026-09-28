@@ -1,90 +1,110 @@
-# Sovereign AI Workbench (Project SIH26117 | MRPL)
-> **Privacy-First, Air-Gapped, On-Device Multimodal Agentic AI Assistant for Industrial & Enterprise Use**
+# Sovereign AI Workbench (v2.0)
+> **Air-Gapped, Privacy-First, On-Device Industrial AI Workstation**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
+[![Platform: Windows | Linux](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)]()
+[![Air-Gapped: Zero Telemetry](https://img.shields.io/badge/Security-100%25%20Air--Gapped-success.svg)]()
 
 ---
 
-## 🌟 Project Overview
-The **Sovereign AI Workbench** is a 100% self-hosted, air-gapped agentic workstation engineered for high-security industrial facilities (e.g., Mangalore Refinery and Petrochemicals Limited - MRPL). It eliminates external cloud AI dependencies and data leakage risks by processing sensitive engineering drawings, inspection logs, SOP manuals, and automation code entirely on local hardware.
+## 📌 Executive Summary
+
+**Sovereign AI Workbench** is an enterprise-grade, zero-telemetry desktop application and runtime engine designed for high-security industrial and petrochemical environments (e.g., refinery operations, pipeline inspection, PLC automation, and air-gapped critical infrastructure).
+
+It delivers completely local, self-hosted LLM inference, dynamic model routing, automated hardware matching, document parsing (PDF, Word, Excel, Images), and interactive chat/reasoning workflows without relying on external cloud APIs or exposing sensitive telemetry.
 
 ---
 
-## 🚀 Quick Start Guide (How to Use)
+## ✨ Key Capabilities
 
-### Option 1: Standalone Single-File Browser UI (Easiest)
-Simply double-click `index.html` in your web browser, or open it directly:
-```bash
-# Double click index.html or open via browser
-start index.html   # On Windows
-```
-**Key Features in Browser UI:**
-- 🖥️ **Live Hardware Profiler**: VRAM, RAM, and GPU status gauges.
-- 🎯 **Industrial Scenario Presets**: Instant load for Hydrocracker inspection notes, PLC automation code, and P&ID drawing OCR.
-- 🔀 **Task Classifier & Router**: Live visual routing between `Qwen2.5-Coder:7B`, `Llama3.2-Vision:11B`, `DeepSeek-R1:7B`, and `Mistral-7B`.
-- 🧠 **Agent ReAct Planning Loop**: 6-step animated progress console.
-- 🛡️ **Permission Interceptor Gate Modal**: Interactive approval prompt before executing sandboxed file writes.
-- 📄 **Deliverable Exporter**: Download compiled Microsoft Word (`.docx`) approval notes or `.py` code modules.
-- 🔒 **Air-Gap Network Audit Stream**: Live packet monitor verifying 0 outbound WAN traffic.
+- 🛡️ **100% Air-Gapped & Zero Telemetry**: Complete local execution with strictly zero outbound network requests.
+- ⚡ **Dynamic Hardware-Matched AI Recommender**: Automatic GPU/VRAM/RAM profiling that scores and recommends optimal open-weight models (1.5B to 70B).
+- 📦 **One-Click Model Hub**: Built-in discovery and local streaming downloader for 30+ open-source models (DeepSeek-R1, Qwen 2.5 Coder, Llama 3.2 Vision, Mistral, Gemma, Phi-4).
+- 🔀 **Intelligent Auto-Router**: Automatically analyzes incoming user prompts and delegates them to specialized models (Coding, Deep Reasoning, Vision/OCR, or Fast Chat).
+- 📄 **Multi-Modal Document Parsing**: Ingests PDFs, Word (.docx), Excel spreadsheets, logs, and technical drawings for instantaneous grounded analysis.
+- 📊 **Executive Report Exporter**: One-click generation of professional engineering memos and reports directly into formatted `.pdf` or `.docx`.
+- 🎨 **Modern Minimalist UI**: Clean, responsive interface featuring multiple high-contrast luxury themes, smooth animations, and dark/light modes.
 
 ---
 
-### Option 2: Python Engine & Local Server
-Run the single-file Python engine (`workbench.py`):
+## 📂 Repository Structure
 
-#### A. Launch Web Server Dashboard
-```bash
-python workbench.py
-```
-Open **`http://localhost:8080`** in any browser.
-
-#### B. Launch Interactive Terminal CLI Agent
-```bash
-python workbench.py --cli
-```
-
----
-
-## 🛠️ Complete Setup & Offline Deployment Guide
-
-### 1. Pre-Flight Resource Downloads (Before Air-Gapping)
-Download these required components on an internet-connected machine:
-
-#### LLM Serving Runtime
-- **Ollama Offline Installer**: [https://github.com/ollama/ollama/releases](https://github.com/ollama/ollama/releases)
-
-#### Open-Weight GGUF Models
-Pull models via Ollama CLI:
-```bash
-ollama pull qwen2.5-coder:7b
-ollama pull llama3.2-vision:11b
-ollama pull deepseek-r1:7b
-ollama pull mistral:7b
-```
-
-#### Offline Python Wheels
-```bash
-pip download -d ./wheels python-docx psutil requests torch
+```text
+├── main.py                     # Primary desktop entrypoint & local HTTP server
+├── sovereign_engine.py         # Hardware profiling, model orchestration & inference engine
+├── app_ui.html                 # Modern SPA desktop frontend
+├── workbench.py                # Standalone lightweight runner
+├── Run_Sovereign_AI_Workbench.bat  # 1-click Windows launcher
+├── run_linux.sh                # 1-click Linux launcher
+├── Install_Sovereign_AI_Workbench.bat # Automated environment setup script
+├── assets/                     # Application logos, branding, and icons
+│   ├── app_icon.png
+│   ├── icon.ico
+│   └── icon.png
+├── docs/                       # Technical architecture & project guides
+│   ├── PROJECT_DOCUMENTATION.md
+│   ├── PPT_SLIDE_EDITING_GUIDE.md
+│   └── sovereign_ai_workbench_video_script.txt
+└── scripts/                    # Build utilities, installers & packagers
+    ├── build_release_zip.py
+    ├── build_app_and_installer.py
+    └── setup_installer.py
 ```
 
 ---
 
-### 2. Air-Gap Zero-Network Verification Protocol
-To prove 100% sovereign air-gapped security during presentation audits:
+## 🚀 Quick Start Guide
 
-#### System Firewall Enforcement (Windows PowerShell Admin)
-```powershell
-New-NetFirewallRule -DisplayName "AirGap-Block-Outbound" -Direction Outbound -Action Block -Protocol Any
-```
+### Prerequisites
+- Windows 10/11 or Linux (Ubuntu 20.04+)
+- [Python 3.10+](https://www.python.org/downloads/)
+- [Ollama Runtime](https://ollama.com/) installed locally
 
-#### Socket Netstat Verification
+### Running from Source
 ```bash
-netstat -an | findstr 11434
-# Confirms socket listening exclusively on 127.0.0.1 (Loopback)
+# 1. Clone repository
+git clone https://github.com/shabbir-beep/SovereignAIWorkbench.git
+cd SovereignAIWorkbench
+
+# 2. Run the application
+python main.py
 ```
+*The native desktop window will launch automatically, or navigate to `http://127.0.0.1:8080` in your web browser.*
+
+### Running via Batch Launcher (Windows)
+Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and desktop UI instantly.
 
 ---
 
-## 📁 Deliverables & Structure
-- `index.html` — Single-file interactive HTML/JS UI prototype.
-- `workbench.py` — Single-file Python engine with hardware profiler, task router, permission gate, local RAG retriever, deliverable builder, and web server.
-- `./deliverables/` — Output directory for generated `.docx` approval notes and `.py` code files.
-- `README.md` — Complete master guide & operational playbook.
+## 🛠️ Tech Stack & Architecture
+
+- **Frontend**: HTML5, Tailwind CSS, Heroicons SVG Library, Marked.js (Markdown parser)
+- **Desktop Runtime**: PyWebView / Chromium Embedded Framework
+- **Backend Server**: Python 3 standard library HTTP daemon
+- **Inference Engine**: Local Ollama Server API / OpenAI-compatible local endpoints
+- **Hardware Telemetry**: Windows WMI / Linux `/proc` hardware inspection modules
+
+---
+
+## 🔒 Security & Compliance
+
+| Security Pillar | Implementation |
+|---|---|
+| **Data Ingestion** | All files parsed in isolated local memory buffers |
+| **Model Weights** | Encrypted/sandboxed local storage (`data/models/`) |
+| **Network Traffic** | Bound strictly to `127.0.0.1` (Local Loopback only) |
+| **Session State** | Encrypted local JSON storage (`data/sessions/`) |
+
+---
+
+## 📄 Documentation & Links
+
+- Detailed Architecture & Design: [`docs/PROJECT_DOCUMENTATION.md`](docs/PROJECT_DOCUMENTATION.md)
+- Presentation & Slide Guide: [`docs/PPT_SLIDE_EDITING_GUIDE.md`](docs/PPT_SLIDE_EDITING_GUIDE.md)
+- YouTube Video Walkthrough Script: [`docs/sovereign_ai_workbench_video_script.txt`](docs/sovereign_ai_workbench_video_script.txt)
+
+---
+
+## 📜 License
+Distributed under the **MIT License**. See `LICENSE` for more information.
