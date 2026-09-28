@@ -5,3 +5,7 @@ __pycache__/
 *.exe
 *.zip
 *.spec
+
+*.pptx
+*.pdf
+*.ppt
