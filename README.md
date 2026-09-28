@@ -8,7 +8,7 @@
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
 **Sovereign AI Workbench** is an enterprise-grade, zero-telemetry desktop application and runtime engine designed for high-security industrial and petrochemical environments (e.g., refinery operations, pipeline inspection, PLC automation, and air-gapped critical infrastructure).
 
@@ -16,19 +16,19 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 
 ---
 
-## ✨ Key Capabilities
+## Key Capabilities
 
-- 🛡️ **100% Air-Gapped & Zero Telemetry**: Complete local execution with strictly zero outbound network requests.
-- ⚡ **Dynamic Hardware-Matched AI Recommender**: Automatic GPU/VRAM/RAM profiling that scores and recommends optimal open-weight models (1.5B to 70B).
-- 📦 **One-Click Model Hub**: Built-in discovery and local streaming downloader for 30+ open-source models (DeepSeek-R1, Qwen 2.5 Coder, Llama 3.2 Vision, Mistral, Gemma, Phi-4).
-- 🔀 **Intelligent Auto-Router**: Automatically analyzes incoming user prompts and delegates them to specialized models (Coding, Deep Reasoning, Vision/OCR, or Fast Chat).
-- 📄 **Multi-Modal Document Parsing**: Ingests PDFs, Word (.docx), Excel spreadsheets, logs, and technical drawings for instantaneous grounded analysis.
-- 📊 **Executive Report Exporter**: One-click generation of professional engineering memos and reports directly into formatted `.pdf` or `.docx`.
-- 🎨 **Modern Minimalist UI**: Clean, responsive interface featuring multiple high-contrast luxury themes, smooth animations, and dark/light modes.
+- **100% Air-Gapped & Zero Telemetry**: Complete local execution with strictly zero outbound network requests.
+- **Dynamic Hardware-Matched AI Recommender**: Automatic GPU/VRAM/RAM profiling that scores and recommends optimal open-weight models (1.5B to 70B).
+- **One-Click Model Hub**: Built-in discovery and local streaming downloader for 30+ open-source models (DeepSeek-R1, Qwen 2.5 Coder, Llama 3.2 Vision, Mistral, Gemma, Phi-4).
+- **Intelligent Auto-Router**: Automatically analyzes incoming user prompts and delegates them to specialized models (Coding, Deep Reasoning, Vision/OCR, or Fast Chat).
+- **Multi-Modal Document Parsing**: Ingests PDFs, Word (.docx), Excel spreadsheets, logs, and technical drawings for instantaneous grounded analysis.
+- **Executive Report Exporter**: One-click generation of professional engineering memos and reports directly into formatted `.pdf` or `.docx`.
+- **Modern Minimalist UI**: Clean, responsive interface featuring multiple high-contrast luxury themes, smooth animations, and dark/light modes.
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 ├── main.py                     # Primary desktop entrypoint & local HTTP server
@@ -54,7 +54,7 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 - Windows 10/11 or Linux (Ubuntu 20.04+)
@@ -84,7 +84,7 @@ Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and 
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 - **Frontend**: HTML5, Tailwind CSS, Heroicons SVG Library, Marked.js (Markdown parser)
 - **Desktop Runtime**: PyWebView / Chromium Embedded Framework
@@ -94,7 +94,7 @@ Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and 
 
 ---
 
-## 🔒 Security & Compliance
+## Security & Compliance
 
 | Security Pillar | Implementation |
 |---|---|
@@ -105,7 +105,7 @@ Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and 
 
 ---
 
-## 📄 Documentation & Links
+## Documentation & Links
 
 - Detailed Architecture & Design: [`docs/PROJECT_DOCUMENTATION.md`](docs/PROJECT_DOCUMENTATION.md)
 - Presentation & Slide Guide: [`docs/PPT_SLIDE_EDITING_GUIDE.md`](docs/PPT_SLIDE_EDITING_GUIDE.md)
@@ -113,5 +113,5 @@ Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and 
 
 ---
 
-## 📜 License
+## License
 Distributed under the **MIT License**. See `LICENSE` for more information.
