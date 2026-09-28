@@ -67,13 +67,13 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 git clone https://github.com/shabbir-beep/SovereignAIWorkbench.git
 cd SovereignAIWorkbench
 
-# 2. Run the application
+# 2. Launch sandboxed desktop application
 python main.py
 ```
-*The native desktop window will launch automatically, or navigate to `http://127.0.0.1:8080` in your web browser.*
+*The native sandboxed desktop window will launch directly in an isolated process.*
 
 ### Running via Batch Launcher (Windows)
-Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and desktop UI instantly.
+Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and desktop application instantly.
 
 ---
 
