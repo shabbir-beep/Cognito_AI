@@ -61,7 +61,14 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Ollama Runtime](https://ollama.com/) installed locally
 
-### Running from Source
+### Option 1: Standalone Portable Bundle (No Python Required)
+1. Download the pre-built portable distribution archive **`SovereignAIWorkbench_v2.0_Portable.zip`** (available under [GitHub Releases](https://github.com/shabbir-beep/SovereignAIWorkbench/releases)).
+2. Extract the `.zip` archive to any directory or USB drive.
+3. Double-click **`SovereignAIWorkbench.exe`** to launch the self-contained workstation immediately.
+
+---
+
+### Option 2: Running from Source
 ```bash
 # 1. Clone repository
 git clone https://github.com/shabbir-beep/SovereignAIWorkbench.git
@@ -72,7 +79,7 @@ python main.py
 ```
 *The native sandboxed desktop window will launch directly in an isolated process.*
 
-### Running via Batch Launcher (Windows)
+### Option 3: Running via Batch Launcher (Windows)
 Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and desktop application instantly.
 
 ---
