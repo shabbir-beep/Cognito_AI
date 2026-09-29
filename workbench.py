@@ -1,5 +1,5 @@
 """
-Sovereign AI Workbench — Master Implementation Engine (Python Backend & Web Server)
+Cognito AI — Master Implementation Engine (Python Backend & Web Server)
 Project Code: SIH26117 | Organization: Mangalore Refinery and Petrochemicals Limited (MRPL)
 
 Usage:
@@ -223,7 +223,7 @@ class WorkbenchHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def run_web_server(port=8080):
     print("=" * 60)
-    print("  SOVEREIGN AI WORKBENCH - LOCAL SERVER MODE")
+    print("  COGNITO AI WORKBENCH - LOCAL SERVER MODE")
     print("  Project SIH26117 | MRPL Air-Gapped AI Assistant")
     print("=" * 60)
     
@@ -242,14 +242,14 @@ def run_web_server(port=8080):
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\nShutting down Sovereign AI server.")
+            print("\nShutting down Cognito AI server.")
 
 # ----------------------------------------------------
 # CLI MODE EXECUTION
 # ----------------------------------------------------
 def run_cli_agent():
     print("=" * 60)
-    print("  SOVEREIGN AI WORKBENCH - CLI INTERACTIVE AGENT")
+    print("  COGNITO AI WORKBENCH - CLI INTERACTIVE AGENT")
     print("=" * 60)
     
     hw = profile_hardware()
@@ -277,14 +277,14 @@ def run_cli_agent():
     authorized = gate.request_authorization("Create Deliverable File", f"./deliverables/{filename}")
 
     if authorized:
-        body = f"AUTOMATED AUDIT REPORT\n\nTask Prompt: {prompt}\n\nSOP Context:\n{sop_ctx}\n\nClearance granted by Sovereign AI Agent (SIH26117)."
+        body = f"AUTOMATED AUDIT REPORT\n\nTask Prompt: {prompt}\n\nSOP Context:\n{sop_ctx}\n\nClearance granted by Cognito AI Agent (SIH26117)."
         saved_path = create_docx_report("MRPL CONFIDENTIAL APPROVAL NOTE", body, filename)
         print(f"\nDeliverable compiled successfully at: {saved_path}")
     else:
         print("\nAction aborted by user permission gate.")
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Sovereign AI Workbench Engine")
+    parser = argparse.ArgumentParser(description="Cognito AI Engine")
     parser.add_argument("--cli", action="store_true", help="Run interactive CLI mode instead of web server")
     parser.add_argument("--port", type=int, default=8080, help="Web server port (default 8080)")
     args = parser.parse_args()

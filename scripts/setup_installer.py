@@ -1,5 +1,5 @@
 """
-Sovereign AI Workbench — Standalone Windows Installer Setup
+Cognito AI — Standalone Windows Installer Setup
 Project Code: SIH26117 | Organization: Mangalore Refinery and Petrochemicals Limited (MRPL)
 """
 
@@ -17,13 +17,13 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def run_installer():
     print("=" * 65)
-    print("   👑 SOVEREIGN AI WORKBENCH - ONE-CLICK INSTALLATION WIZARD")
+    print("   👑 COGNITO AI WORKBENCH - ONE-CLICK INSTALLATION WIZARD")
     print("   Project SIH26117 | MRPL Air-Gapped Industrial AI Assistant")
     print("=" * 65)
     
     workspace = os.path.dirname(os.path.abspath(__file__))
     local_app_data = os.environ.get("LOCALAPPDATA", r"C:\Users\Public")
-    target_dir = os.path.join(local_app_data, "SovereignAIWorkbench")
+    target_dir = os.path.join(local_app_data, "CognitoAI")
     
     print(f"\n Installation Target Directory: {target_dir}")
     print(" Installing core assets, local RAG database, and open LLM router...")
@@ -46,7 +46,7 @@ def run_installer():
             print(f"  -> Installed: {fname}")
 
     # Desktop Shortcut Creation via PowerShell
-    desktop_path = os.path.join(os.environ.get("USERPROFILE", r"C:\Users\Public"), "Desktop", "Sovereign AI Workbench.lnk")
+    desktop_path = os.path.join(os.environ.get("USERPROFILE", r"C:\Users\Public"), "Desktop", "Cognito AI.lnk")
     python_exe = sys.executable
     main_py = os.path.join(target_dir, "main.py")
 
@@ -59,7 +59,7 @@ def run_installer():
 
     print("\n" + "=" * 65)
     print("   INSTALLATION COMPLETE!")
-    print("   Launching Sovereign AI Workbench Desktop App...")
+    print("   Launching Cognito AI Desktop App...")
     print("=" * 65)
     
     subprocess.Popen([python_exe, main_py], cwd=target_dir)

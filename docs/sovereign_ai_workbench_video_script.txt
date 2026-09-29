@@ -1,12 +1,12 @@
 ================================================================================
-SOVEREIGN AI WORKBENCH — 4-MINUTE YOUTUBE VIDEO SCRIPT
+COGNITO AI WORKBENCH — 4-MINUTE YOUTUBE VIDEO SCRIPT
 ================================================================================
 
 [0:00 – 0:45] ACT 1: THE PROBLEM STATEMENT & THE HOOK
 --------------------------------------------------------------------------------
 VISUAL:
 - Quick montage of industrial environments, oil refineries, critical infrastructure, and red "Network Disconnected / Air-Gapped" security badges.
-- Cut to on-screen host or clean title graphics: "Sovereign AI Workbench v2.0".
+- Cut to on-screen host or clean title graphics: "Cognito AI v2.0".
 
 VOICEOVER / HOST:
 "Modern generative AI is transforming how we work—but what happens when you operate in critical infrastructure where the internet literally cannot exist?
@@ -15,18 +15,18 @@ In high-security environments like oil refineries, energy plants, defense labs, 
 
 The problem statement was clear: How do we deliver an enterprise-grade, multimodal AI assistant that is 100% air-gapped, runs entirely on standard local hardware, and requires zero installation?
 
-Meet Sovereign AI Workbench v2.0."
+Meet Cognito AI v2.0."
 
 
 [0:45 – 1:30] ACT 2: ZERO-DEPENDENCY ARCHITECTURE & HARDWARE PROFILING
 --------------------------------------------------------------------------------
 VISUAL:
 - Screen capture showing a single .zip archive being extracted.
-- Double-clicking SovereignAIWorkbench.exe and the instant launch.
+- Double-clicking CognitoAI.exe and the instant launch.
 - Automatic hardware profile detection banner displaying GPU, VRAM, RAM, and CPU Cores.
 
 VOICEOVER / HOST:
-"Sovereign AI Workbench is packaged as a completely self-contained, portable single-executable desktop application. There are no Python dependencies to install, no Docker containers to configure, and zero background telemetry.
+"Cognito AI is packaged as a completely self-contained, portable single-executable desktop application. There are no Python dependencies to install, no Docker containers to configure, and zero background telemetry.
 
 On initial launch, the embedded engine automatically profiles your host machine—detecting physical GPU architecture, VRAM capacity, available RAM, and CPU core counts. 
 
@@ -54,7 +54,7 @@ VISUAL:
 - Opening the Server Settings modal showing switching between Local Embedded Ollama, Remote LAN Server, and OpenAI-compatible endpoints with live test ping.
 
 VOICEOVER / HOST:
-"Under the hood, Sovereign AI Workbench orchestrates an air-gapped Ollama runtime using Windows Job Objects for clean process sandboxing and zero orphan processes.
+"Under the hood, Cognito AI orchestrates an air-gapped Ollama runtime using Windows Job Objects for clean process sandboxing and zero orphan processes.
 
 But it also scales with your team. If your plant has a centralized on-premise compute cluster, you can seamlessly switch from Local Embedded mode to Remote LAN or OpenAI-compatible vLLM endpoints with built-in latency and handshake testing.
 
@@ -68,7 +68,7 @@ VISUAL:
 - Outro cards with project repository and download links.
 
 VOICEOVER / HOST:
-"Sovereign AI Workbench bridges the gap between state-of-the-art AI capabilities and strict operational security. It empowers engineers and researchers to query technical docs, debug code, and analyze sensitive data—with total sovereignty and zero cloud tether.
+"Cognito AI bridges the gap between state-of-the-art AI capabilities and strict operational security. It empowers engineers and researchers to query technical docs, debug code, and analyze sensitive data—with total sovereignty and zero cloud tether.
 
 The portable release package is ready to run right out of the box. 
 

@@ -1,6 +1,6 @@
 """
 Generate SIH 2026 Presentation PPTX for Problem Statement SIH26117
-Sovereign On-Premise Agentic AI Workbench - MRPL
+Cognito On-Premise Agentic AI Workbench - MRPL
 Using python-pptx with a 16:9 widescreen format and custom card/table layouts.
 """
 
@@ -65,7 +65,7 @@ def create_presentation(output_path):
         # Header text (Left)
         tx_hdr = slide.shapes.add_textbox(Inches(0.5), Inches(0.08), Inches(8.5), Inches(0.4))
         p = tx_hdr.text_frame.paragraphs[0]
-        p.text = "SMART INDIA HACKATHON 2026  •  SOVEREIGN ON-PREMISE AGENTIC AI WORKBENCH"
+        p.text = "SMART INDIA HACKATHON 2026  •  COGNITO ON-PREMISE AGENTIC AI WORKBENCH"
         p.font.name = "Arial"
         p.font.size = Pt(11)
         p.font.bold = True
@@ -125,7 +125,7 @@ def create_presentation(output_path):
     p1.alignment = PP_ALIGN.CENTER
 
     p2 = tf1.add_paragraph()
-    p2.text = "SOVEREIGN ON-PREMISE AGENTIC AI WORKBENCH"
+    p2.text = "COGNITO ON-PREMISE AGENTIC AI WORKBENCH"
     p2.font.name = "Arial"
     p2.font.size = Pt(18)
     p2.font.bold = True
@@ -140,7 +140,7 @@ def create_presentation(output_path):
 
     meta_items = [
         ("Problem Statement ID:", "SIH26117", True),
-        ("Problem Statement Title:", "Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
+        ("Problem Statement Title:", "Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
         ("Organization:", "Mangalore Refinery and Petrochemicals Limited (MRPL)", True),
         ("Theme & PS Category:", "Smart Automation  |  Software", False),
         ("Team ID & Name:", "[Registered Team ID]  —  [Registered Team Name]", False),
@@ -199,7 +199,7 @@ def create_presentation(output_path):
     # Slide Title
     tx_s2 = s2.shapes.add_textbox(Inches(0.8), Inches(0.7), Inches(11.733), Inches(0.5))
     p_s2 = tx_s2.text_frame.paragraphs[0]
-    p_s2.text = "SOVEREIGN AI WORKBENCH — PROBLEM & SOLUTION"
+    p_s2.text = "COGNITO AI WORKBENCH — PROBLEM & SOLUTION"
     p_s2.font.name = "Arial"
     p_s2.font.size = Pt(18)
     p_s2.font.bold = True
@@ -249,7 +249,7 @@ def create_presentation(output_path):
     p_sol_h.font.color.rgb = C_GREEN_700
 
     sol_bullets = [
-        "100% Self-Hosted & Sovereign: Fully offline desktop workstation running on refinery hardware with verifiable zero external network traffic.",
+        "100% Self-Hosted & Cognito: Fully offline desktop workstation running on refinery hardware with verifiable zero external network traffic.",
         "Hardware-Aware Intelligence: Auto-detects real CPU/RAM/VRAM and scores a 32-model catalog to run the best-fit model comfortably.",
         "Multi-Format File Ingestion: Native extraction from Word, Excel telemetry sheets, PDFs, code files, and P&ID diagrams.",
         "Automated Deliverable Dispatch: One-click generation of signed executive approval notes in DOCX and PDF directly to Desktop."
@@ -727,5 +727,5 @@ def create_presentation(output_path):
 
 if __name__ == '__main__':
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    out_pptx = os.path.join(root_dir, "SIH2026_SIH26117_Sovereign_AI_Workbench_Presentation.pptx")
+    out_pptx = os.path.join(root_dir, "SIH2026_SIH26117_Cognito_AI_Workbench_Presentation.pptx")
     create_presentation(out_pptx)

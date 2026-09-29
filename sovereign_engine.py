@@ -1,5 +1,5 @@
 """
-Sovereign AI Engine — Hardware-Intelligent Model Manager, Multi-Turn RAG & Session Engine
+Cognito AI Engine — Hardware-Intelligent Model Manager, Multi-Turn RAG & Session Engine
 Project Code: SIH26117 | Mangalore Refinery and Petrochemicals Limited (MRPL)
 Cross-platform compatible: Windows & Linux
 """
@@ -81,7 +81,7 @@ def verify_and_create_data_dirs():
 def migrate_legacy_data():
     """Migrates legacy %LOCALAPPDATA% / ~/.sovereign_ai data to portable data/ directory if present."""
     if sys.platform == 'win32':
-        legacy_dir = os.path.join(os.environ.get('LOCALAPPDATA', ''), 'SovereignAI')
+        legacy_dir = os.path.join(os.environ.get('LOCALAPPDATA', ''), 'CognitoAI')
     else:
         legacy_dir = os.path.expanduser('~/.sovereign_ai')
 
@@ -970,7 +970,7 @@ def test_server_connection(config):
     if server_type in ("local", "remote_ollama"):
         tags_url = f"{url}/api/tags"
         try:
-            req = urllib.request.Request(tags_url, headers={"User-Agent": "SovereignAI/2.0"})
+            req = urllib.request.Request(tags_url, headers={"User-Agent": "CognitoAI/2.0"})
             ctx = _make_ssl_context()
             with urllib.request.urlopen(req, timeout=5, context=ctx) as resp:
                 if resp.status == 200:
@@ -986,7 +986,7 @@ def test_server_connection(config):
 
     elif server_type == "openai_compatible":
         models_url = f"{url}/models" if url.endswith("/v1") else f"{url}/v1/models"
-        headers = {"User-Agent": "SovereignAI/2.0"}
+        headers = {"User-Agent": "CognitoAI/2.0"}
         if api_key:
             headers["Authorization"] = f"Bearer {api_key}"
         try:
@@ -1028,12 +1028,12 @@ def _http_get(url, timeout=5):
             return r.status_code, r.text
         except Exception:
             pass
-    req = urllib.request.Request(url, headers={"User-Agent": "SovereignAI/2.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "CognitoAI/2.0"})
     with urllib.request.urlopen(req, timeout=timeout, context=_make_ssl_context()) as resp:
         return resp.status, resp.read().decode('utf-8', errors='replace')
 
 def _http_post_json(url, data, timeout=60, headers=None):
-    hdrs = {'Content-Type': 'application/json', 'User-Agent': 'SovereignAI/2.0'}
+    hdrs = {'Content-Type': 'application/json', 'User-Agent': 'CognitoAI/2.0'}
     if headers:
         hdrs.update(headers)
     if requests:
@@ -1580,7 +1580,7 @@ def query_model_chat(messages, model_name="phi3.5:3.8b", server_config=None, fil
 
     # System instruction grounding
     system_prompt = (
-        "You are Sovereign AI, an air-gapped industrial AI assistant specialized for Mangalore "
+        "You are Cognito AI, an air-gapped industrial AI assistant specialized for Mangalore "
         "Refinery and Petrochemicals Limited (MRPL). You adhere to MRPL Standard Operating Procedures, "
         "industrial safety codes, refinery equipment telemetry (Hydrocracker, Crude Distillation, FCCU), "
         "automation scripts, and tariff accounting. Respond with technical accuracy and clarity."
@@ -1661,7 +1661,7 @@ def query_model_chat(messages, model_name="phi3.5:3.8b", server_config=None, fil
 # ============================================================
 # DOCUMENT GENERATOR & CROSS-PLATFORM DESKTOP SAVE HANDLER
 # ============================================================
-def export_response_document(text, format_type='pdf', title="Sovereign AI Analysis Report"):
+def export_response_document(text, format_type='pdf', title="Cognito AI Analysis Report"):
     """Generates downloadable PDF, DOCX, or TXT document for an AI response."""
     out_dir = EXPORTS_DIR
     os.makedirs(out_dir, exist_ok=True)
@@ -1669,7 +1669,7 @@ def export_response_document(text, format_type='pdf', title="Sovereign AI Analys
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 
     if format_type == 'pdf':
-        filepath = os.path.join(out_dir, f"Sovereign_AI_Report_{timestamp}.pdf")
+        filepath = os.path.join(out_dir, f"Cognito_AI_Report_{timestamp}.pdf")
         try:
             from reportlab.lib.pagesizes import letter
             from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable
@@ -1714,7 +1714,7 @@ def export_response_document(text, format_type='pdf', title="Sovereign AI Analys
 
             story = [
                 Paragraph(title, title_style),
-                Paragraph(f"MRPL SOVEREIGN AI WORKBENCH • GENERATED {datetime.now().strftime('%Y-%m-%d %H:%M')}", sub_style),
+                Paragraph(f"MRPL COGNITO AI WORKBENCH • GENERATED {datetime.now().strftime('%Y-%m-%d %H:%M')}", sub_style),
                 HRFlowable(width="100%", thickness=1, color=colors.HexColor('#cbd5e1'), spaceAfter=12)
             ]
 
@@ -1735,25 +1735,25 @@ def export_response_document(text, format_type='pdf', title="Sovereign AI Analys
             doc.build(story)
             return filepath
         except Exception:
-            filepath = os.path.join(out_dir, f"Sovereign_AI_Report_{timestamp}.txt")
+            filepath = os.path.join(out_dir, f"Cognito_AI_Report_{timestamp}.txt")
             with open(filepath, "w", encoding="utf-8") as f:
                 f.write(f"{title}\n\n{text}")
             return filepath
 
     elif format_type == 'docx':
-        filepath = os.path.join(out_dir, f"Sovereign_AI_Report_{timestamp}.docx")
+        filepath = os.path.join(out_dir, f"Cognito_AI_Report_{timestamp}.docx")
         try:
             import docx
             doc = docx.Document()
             doc.add_heading(title, level=0)
-            doc.add_paragraph(f"MRPL SOVEREIGN AI WORKBENCH • GENERATED {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
+            doc.add_paragraph(f"MRPL COGNITO AI WORKBENCH • GENERATED {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
             doc.add_paragraph(text)
             doc.save(filepath)
             return filepath
         except Exception:
             pass
 
-    filepath = os.path.join(out_dir, f"Sovereign_AI_Report_{timestamp}.txt")
+    filepath = os.path.join(out_dir, f"Cognito_AI_Report_{timestamp}.txt")
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(f"{title}\n\n{text}")
     return filepath
@@ -1795,7 +1795,7 @@ SUBJECT: Hydrocracker Unit-4 Pressure Log Audit & Inspection Clearance
 
 1. EXECUTIVE SUMMARY
 An automated audit of Hydrocracker Unit-4 operational telemetry was conducted
-using the on-device Sovereign AI Assistant. Analyzed data logged an operating
+using the on-device Cognito AI Assistant. Analyzed data logged an operating
 pressure of 142.5 bar at 410°C over a 24-hour cycle.
 
 2. SOP COMPLIANCE ANALYSIS (MRPL_SOP_HC_2024)
@@ -1808,7 +1808,7 @@ pressure of 142.5 bar at 410°C over a 24-hour cycle.
 Approval is GRANTED for continued operation under normal throughput parameters,
 subject to mandatory secondary pressure sensor calibration.
 
-RECOMMENDED BY: Sovereign AI Workstation (SIH26117)
+RECOMMENDED BY: Cognito AI Workstation (SIH26117)
 APPROVED BY: ___________________________ (Operations Manager Signature)"""
 
     try:

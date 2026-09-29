@@ -1,6 +1,6 @@
 """
 Build Text-Heavy SIH 2026 Template PowerPoint Presentation for SIH26117
-Sovereign On-Premise Agentic AI Workbench (MRPL)
+Cognito On-Premise Agentic AI Workbench (MRPL)
 Maximized information density: includes detailed engineering architecture,
 mathematical formulas, VRAM management, 32-model catalog breakdown,
 SOP compliance rules, and complete stakeholder value matrices.
@@ -160,7 +160,7 @@ def build_text_heavy_presentation(output_path):
     p_t1.alignment = PP_ALIGN.CENTER
 
     p_t2 = tf_s1_t.add_paragraph()
-    p_t2.text = "SOVEREIGN ON-PREMISE\nAGENTIC AI WORKBENCH"
+    p_t2.text = "COGNITO ON-PREMISE\nAGENTIC AI WORKBENCH"
     p_t2.font.name = "Georgia"
     p_t2.font.size = Pt(17)
     p_t2.font.bold = True
@@ -176,12 +176,12 @@ def build_text_heavy_presentation(output_path):
 
     meta_bullets = [
         ("• Problem Statement ID: ", "SIH26117", True),
-        ("• Problem Statement Title: ", "Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
+        ("• Problem Statement Title: ", "Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
         ("• Organization: ", "Mangalore Refinery and Petrochemicals Limited (MRPL)", True),
         ("• Theme & Category: ", "Smart Automation  |  Software", False),
         ("• Team ID & Name: ", "[To be updated / Registered Team ID] — [Registered Team Name]", False),
         ("• Core Tech Stack: ", "Python 3.10-3.14 (Multithreaded Server), PyWebView SPA (HTML5/CSS3/JS), Standalone Embedded Ollama (Port 11434), ReportLab PDF, python-docx, openpyxl", False),
-        ("• Deployment Model: ", "Zero-Install Single-File Portable Windows Executable (SovereignAIWorkbench.exe) & Linux Script with self-contained data/ folder structure", False),
+        ("• Deployment Model: ", "Zero-Install Single-File Portable Windows Executable (CognitoAI.exe) & Linux Script with self-contained data/ folder structure", False),
     ]
 
     for idx, (label, val, highlight) in enumerate(meta_bullets):
@@ -230,7 +230,7 @@ def build_text_heavy_presentation(output_path):
     # SLIDE 2: Problem, Solution, 6 Pillars Wheel, & 5-Tier Capabilities Cylinder
     # =========================================================================
     s2 = prs.slides.add_slide(blank_layout)
-    add_common_header_footer(s2, "SOVEREIGN AI WORKBENCH", 2)
+    add_common_header_footer(s2, "COGNITO AI WORKBENCH", 2)
 
     # Left Column: Problem & Proposed Solution
     tx_p = s2.shapes.add_textbox(Inches(0.4), Inches(1.35), Inches(3.6), Inches(2.6))

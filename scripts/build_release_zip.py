@@ -1,5 +1,5 @@
 """
-Build Release Script for Sovereign AI Workbench
+Build Release Script for Cognito AI
 Compiles the executable and packages the portable .zip distribution
 including pre-made data/ directory structure.
 """
@@ -20,18 +20,18 @@ def run_command(cmd):
 def main():
     root_dir = os.path.dirname(os.path.abspath(__file__))
     dist_dir = os.path.join(root_dir, 'dist')
-    release_folder = os.path.join(dist_dir, 'SovereignAIWorkbench_Portable')
-    zip_path = os.path.join(root_dir, 'SovereignAIWorkbench_v2.0_Portable.zip')
+    release_folder = os.path.join(dist_dir, 'CognitoAI_Portable')
+    zip_path = os.path.join(root_dir, 'CognitoAI_v2.0_Portable.zip')
 
     pyinstaller_exe = r"C:\Users\Stech\AppData\Roaming\Python\Python314\Scripts\pyinstaller.exe"
     if not os.path.exists(pyinstaller_exe):
         pyinstaller_exe = "pyinstaller"
 
     # 1. Rebuild executable using PyInstaller
-    print("=== 1. Compiling SovereignAIWorkbench.exe with Custom Icon ===")
+    print("=== 1. Compiling CognitoAI.exe with Custom Icon ===")
     cmd = (
         f'"{pyinstaller_exe}" --noconfirm --onefile --windowed '
-        f'--name SovereignAIWorkbench '
+        f'--name CognitoAI '
         f'--icon "icon.ico" '
         f'--add-data "app_ui.html;." '
         f'--add-data "sovereign_engine.py;." '
@@ -43,13 +43,13 @@ def main():
     )
     run_command(cmd)
 
-    exe_src = os.path.join(dist_dir, 'SovereignAIWorkbench.exe')
+    exe_src = os.path.join(dist_dir, 'CognitoAI.exe')
     if not os.path.exists(exe_src):
-        print("Build failed: SovereignAIWorkbench.exe not found.")
+        print("Build failed: CognitoAI.exe not found.")
         sys.exit(1)
 
     # Copy binary to root workspace
-    shutil.copy2(exe_src, os.path.join(root_dir, 'SovereignAIWorkbench.exe'))
+    shutil.copy2(exe_src, os.path.join(root_dir, 'CognitoAI.exe'))
 
     # 2. Assemble Portable Release Directory
     print("=== 2. Creating Portable Distribution Folder ===")
@@ -57,7 +57,7 @@ def main():
         shutil.rmtree(release_folder)
 
     os.makedirs(release_folder, exist_ok=True)
-    shutil.copy2(exe_src, os.path.join(release_folder, 'SovereignAIWorkbench.exe'))
+    shutil.copy2(exe_src, os.path.join(release_folder, 'CognitoAI.exe'))
 
     # Pre-made data directories
     data_dir = os.path.join(release_folder, 'data')
@@ -67,13 +67,13 @@ def main():
     os.makedirs(os.path.join(data_dir, 'ollama'), exist_ok=True)
     os.makedirs(os.path.join(data_dir, 'exports'), exist_ok=True)
 
-    readme_content = """Sovereign AI Workbench v2.0 — Portable Release
+    readme_content = """Cognito AI v2.0 — Portable Release
 ===================================================
 
 Quick Start:
-1. Double click SovereignAIWorkbench.exe to launch.
+1. Double click CognitoAI.exe to launch.
 2. All settings, models, sessions, and engine data are saved inside the 'data/' folder.
-3. Keep the 'data/' folder alongside SovereignAIWorkbench.exe when moving the application.
+3. Keep the 'data/' folder alongside CognitoAI.exe when moving the application.
 
 Requirements:
 - Windows 10/11 64-bit or Linux
@@ -92,7 +92,7 @@ Requirements:
             for file in files:
                 abs_file = os.path.join(root, file)
                 rel_path = os.path.relpath(abs_file, release_folder)
-                zf.write(abs_file, arcname=os.path.join('SovereignAIWorkbench_Portable', rel_path))
+                zf.write(abs_file, arcname=os.path.join('CognitoAI_Portable', rel_path))
 
     print("=" * 65)
     print(f" SUCCESS: Portable zip package created at:")

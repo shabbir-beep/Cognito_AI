@@ -1,4 +1,4 @@
-# Sovereign AI Workbench (v2.0)
+# Cognito AI (v2.0)
 > **Air-Gapped, Privacy-First, On-Device Industrial AI Workstation**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-**Sovereign AI Workbench** is an enterprise-grade, zero-telemetry desktop application and runtime engine designed for high-security industrial and petrochemical environments (e.g., refinery operations, pipeline inspection, PLC automation, and air-gapped critical infrastructure).
+**Cognito AI** is an enterprise-grade, zero-telemetry desktop application and runtime engine designed for high-security industrial and petrochemical environments (e.g., refinery operations, pipeline inspection, PLC automation, and air-gapped critical infrastructure).
 
 It delivers completely local, self-hosted LLM inference, dynamic model routing, automated hardware matching, document parsing (PDF, Word, Excel, Images), and interactive chat/reasoning workflows without relying on external cloud APIs or exposing sensitive telemetry.
 
@@ -35,9 +35,9 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 ├── sovereign_engine.py         # Hardware profiling, model orchestration & inference engine
 ├── app_ui.html                 # Modern SPA desktop frontend
 ├── workbench.py                # Standalone lightweight runner
-├── Run_Sovereign_AI_Workbench.bat  # 1-click Windows launcher
+├── Run_Cognito_AI.bat          # 1-click Windows launcher
 ├── run_linux.sh                # 1-click Linux launcher
-├── Install_Sovereign_AI_Workbench.bat # Automated environment setup script
+├── Install_Cognito_AI.bat      # Automated environment setup script
 ├── assets/                     # Application logos, branding, and icons
 │   ├── app_icon.png
 │   ├── icon.ico
@@ -62,17 +62,17 @@ It delivers completely local, self-hosted LLM inference, dynamic model routing, 
 - [Ollama Runtime](https://ollama.com/) installed locally
 
 ### Option 1: Standalone Portable Bundle (No Python Required)
-1. Download the pre-built portable distribution archive **`SovereignAIWorkbench_v2.0_Portable.zip`** (available under [GitHub Releases](https://github.com/shabbir-beep/SovereignAIWorkbench/releases)).
+1. Download the pre-built portable distribution archive **`CognitoAI_v2.0_Portable.zip`** (available under [GitHub Releases](https://github.com/shabbir-beep/CognitoAI/releases)).
 2. Extract the `.zip` archive to any directory or USB drive.
-3. Double-click **`SovereignAIWorkbench.exe`** to launch the self-contained workstation immediately.
+3. Double-click **`CognitoAI.exe`** to launch the self-contained workstation immediately.
 
 ---
 
 ### Option 2: Running from Source
 ```bash
 # 1. Clone repository
-git clone https://github.com/shabbir-beep/SovereignAIWorkbench.git
-cd SovereignAIWorkbench
+git clone https://github.com/shabbir-beep/CognitoAI.git
+cd CognitoAI
 
 # 2. Launch sandboxed desktop application
 python main.py
@@ -80,7 +80,7 @@ python main.py
 *The native sandboxed desktop window will launch directly in an isolated process.*
 
 ### Option 3: Running via Batch Launcher (Windows)
-Double-click **`Run_Sovereign_AI_Workbench.bat`** to start the local engine and desktop application instantly.
+Double-click **`Run_Cognito_AI.bat`** to start the local engine and desktop application instantly.
 
 ---
 

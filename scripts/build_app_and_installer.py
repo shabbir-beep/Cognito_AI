@@ -1,5 +1,5 @@
 """
-Sovereign AI Workbench — Optimized PyInstaller & Windows Installer Builder
+Cognito AI — Optimized PyInstaller & Windows Installer Builder
 Project Code: SIH26117 | MRPL
 """
 
@@ -19,7 +19,7 @@ PYINSTALLER_EXE = r"C:\Users\Stech\AppData\Roaming\Python\Python314\Scripts\pyin
 def build():
     workspace = os.path.abspath(os.path.dirname(__file__))
     print("=" * 60)
-    print("  BUILDING SOVEREIGN AI WORKBENCH STANDALONE EXECUTABLE")
+    print("  BUILDING COGNITO AI WORKBENCH STANDALONE EXECUTABLE")
     print("=" * 60)
 
     # 1. Build main application executable with heavy AI libs excluded for fast packaging
@@ -28,7 +28,7 @@ def build():
         "--noconfirm",
         "--onedir",
         "--windowed",
-        "--name", "SovereignAIWorkbench",
+        "--name", "CognitoAI",
         "--exclude-module", "torch",
         "--exclude-module", "scipy",
         "--exclude-module", "numpy",
@@ -41,14 +41,14 @@ def build():
     print("Running PyInstaller for main application...")
     res1 = subprocess.run(cmd_app, capture_output=True, text=True, cwd=workspace)
     if res1.returncode == 0:
-        print("✅ Application bundle created successfully in ./dist/SovereignAIWorkbench/")
+        print("✅ Application bundle created successfully in ./dist/CognitoAI/")
     else:
         print("Application packaging output:\n", res1.stderr[-1000:])
 
     # 2. Build standalone single-file Installer executable setup_installer.py
     installer_script = os.path.join(workspace, "setup_installer.py")
     installer_code = '''"""
-Sovereign AI Workbench - One-Click Installer Setup
+Cognito AI - One-Click Installer Setup
 Project SIH26117 | MRPL
 """
 import os
@@ -65,20 +65,20 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def run_installer():
     print("=" * 65)
-    print("   SOVEREIGN AI WORKBENCH - ONE-CLICK INSTALLATION WIZARD")
+    print("   COGNITO AI WORKBENCH - ONE-CLICK INSTALLATION WIZARD")
     print("   Project SIH26117 | MRPL Air-Gapped Industrial AI Assistant")
     print("=" * 65)
     
     local_app_data = os.environ.get("LOCALAPPDATA", r"C:\\Users\\Public")
-    target_dir = os.path.join(local_app_data, "SovereignAIWorkbench")
+    target_dir = os.path.join(local_app_data, "CognitoAI")
     
     base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    bundle_source = os.path.join(base_dir, "SovereignAIWorkbench")
+    bundle_source = os.path.join(base_dir, "CognitoAI")
     if not os.path.exists(bundle_source):
-        bundle_source = os.path.join(base_dir, "dist", "SovereignAIWorkbench")
+        bundle_source = os.path.join(base_dir, "dist", "CognitoAI")
         
     if not os.path.exists(bundle_source):
-        bundle_source = os.path.join(r"c:\\Users\\Stech\\Documents\\antigravity\\busy-lovelace", "dist", "SovereignAIWorkbench")
+        bundle_source = os.path.join(r"c:\\Users\\Stech\\Documents\\antigravity\\busy-lovelace", "dist", "CognitoAI")
 
     print(f" Target Directory: {target_dir}")
     print(" Installing core assets, local RAG database, and open LLM router...")
@@ -96,8 +96,8 @@ def run_installer():
         print(f" Note during copy: {e}")
 
     # Desktop Shortcut Creation via PowerShell
-    target_exe = os.path.join(target_dir, "SovereignAIWorkbench.exe")
-    desktop_path = os.path.join(os.environ.get("USERPROFILE", r"C:\\"), "Desktop", "Sovereign AI Workbench.lnk")
+    target_exe = os.path.join(target_dir, "CognitoAI.exe")
+    desktop_path = os.path.join(os.environ.get("USERPROFILE", r"C:\\"), "Desktop", "Cognito AI.lnk")
     
     ps_cmd = f'$s=(New-Object -COM WScript.Shell).CreateShortcut("{desktop_path}");$s.TargetPath="{target_exe}";$s.WorkingDirectory="{target_dir}";$s.Save()'
     try:
@@ -108,7 +108,7 @@ def run_installer():
 
     print("\\n" + "=" * 65)
     print("   INSTALLATION COMPLETE!")
-    print("   Launching Sovereign AI Workbench Desktop App...")
+    print("   Launching Cognito AI Desktop App...")
     print("=" * 65)
     
     if os.path.exists(target_exe):
@@ -128,20 +128,20 @@ if __name__ == '__main__':
         PYINSTALLER_EXE,
         "--noconfirm",
         "--onefile",
-        "--name", "Install_Sovereign_AI_Workbench",
+        "--name", "Install_Cognito_AI_Workbench",
         "--exclude-module", "torch",
         "--exclude-module", "scipy",
         "--exclude-module", "numpy",
-        "--add-data", f"{os.path.join(workspace, 'dist', 'SovereignAIWorkbench')};SovereignAIWorkbench",
+        "--add-data", f"{os.path.join(workspace, 'dist', 'CognitoAI')};CognitoAI",
         installer_script
     ]
     
-    print("\nPackaging One-Click Installer Executable (Install_Sovereign_AI_Workbench.exe)...")
+    print("\nPackaging One-Click Installer Executable (Install_Cognito_AI_Workbench.exe)...")
     res2 = subprocess.run(cmd_installer, capture_output=True, text=True, cwd=workspace)
     if res2.returncode == 0:
         print("\n============================================================")
         print(" ✅ SUCCESS: ONE-CLICK INSTALLER CREATED!")
-        print(" Location: ./dist/Install_Sovereign_AI_Workbench.exe")
+        print(" Location: ./dist/Install_Cognito_AI_Workbench.exe")
         print("============================================================")
     else:
         print("Installer build output:\n", res2.stderr[-1000:])

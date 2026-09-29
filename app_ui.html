@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Local AI Workbench v2.0</title>
+  <title>Cognito AI v2.0</title>
   <link rel="icon" type="image/png" href="/icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
@@ -577,7 +577,7 @@
     </div>
     <div class="space-y-1.5">
       <h2 class="text-base font-extrabold tracking-wide text-slate-100">
-        SOVEREIGN AI WORKBENCH
+        COGNITO AI WORKBENCH
       </h2>
       <p class="text-xs text-slate-400 font-mono" id="splashStatusText">Initializing runtime &amp; hardware engine...</p>
     </div>
@@ -767,7 +767,7 @@
           </div>
         </div>
         <div class="truncate">
-          <h1 class="text-xs font-bold tracking-wide text-primary truncate">SOVEREIGN WORKBENCH</h1>
+          <h1 class="text-xs font-bold tracking-wide text-primary truncate">COGNITO AI WORKBENCH</h1>
           <p class="text-[10px] text-muted truncate">Local AI • Air-Gapped</p>
         </div>
       </div>
@@ -917,7 +917,7 @@
       </div>
 
       <div class="text-[10px] text-muted text-center mt-2 font-sans">
-        Sovereign AI Workbench • Air-Gapped Industrial AI Platform • Export to PDF, Word &amp; Text
+        Cognito AI • Air-Gapped Industrial AI Platform • Export to PDF, Word &amp; Text
       </div>
     </div>
   </div>
@@ -1941,7 +1941,7 @@
               <img src="/icon.png" class="w-8 h-8 object-contain">
             </div>
             <div class="space-y-1">
-              <h3 class="text-base font-bold text-primary">Sovereign AI Local Workbench</h3>
+              <h3 class="text-base font-bold text-primary">Cognito AI Local Workbench</h3>
               <p class="text-xs text-secondary max-w-md mx-auto leading-relaxed">
                 Air-gapped local AI assistant for engineering, code automation, telemetry analysis, and structured report synthesis.
               </p>
@@ -2045,7 +2045,7 @@
                   <img src="/icon.png" class="w-3.5 h-3.5 object-contain">
                 </div>
               </div>
-              <span class="text-primary font-bold">${esc(model || 'Sovereign AI')}</span>
+              <span class="text-primary font-bold">${esc(model || 'Cognito AI')}</span>
               ${routedBadge}
             </div>
             <div class="flex items-center gap-1.5 flex-wrap">
@@ -2136,7 +2136,7 @@
         const resp = await fetch('/api/export_doc', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ text: text, format: format, title: "Sovereign AI Engineering Report" })
+          body: JSON.stringify({ text: text, format: format, title: "Cognito AI Engineering Report" })
         });
         const data = await resp.json();
         if (data.download_url) {

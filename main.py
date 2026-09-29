@@ -1,5 +1,5 @@
 """
-Sovereign AI Workbench — Desktop Entrypoint & Multithreaded API Server
+Cognito AI — Desktop Entrypoint & Multithreaded API Server
 Project Code: SIH26117 | MRPL
 Cross-platform compatible: Windows & Linux
 """
@@ -69,7 +69,7 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-class SovereignHTTPHandler(http.server.SimpleHTTPRequestHandler):
+class CognitoHTTPHandler(http.server.SimpleHTTPRequestHandler):
     """Handles frontend UI serving and REST/SSE endpoints."""
 
     def log_message(self, format, *args):
@@ -304,7 +304,7 @@ class SovereignHTTPHandler(http.server.SimpleHTTPRequestHandler):
         if parsed.path in ("/api/export", "/api/export_doc"):
             text = req.get("text", "")
             fmt = req.get("format", "pdf")
-            title = req.get("title", "Sovereign AI Report")
+            title = req.get("title", "Cognito_AI_Report")
             filePath = export_response_document(text, format_type=fmt, title=title)
 
             if os.path.exists(filePath):
@@ -400,7 +400,7 @@ class SovereignHTTPHandler(http.server.SimpleHTTPRequestHandler):
 # SERVER & APP LAUNCHER
 # ==============================================================
 def start_backend_server(port=8085):
-    handler = SovereignHTTPHandler
+    handler = CognitoHTTPHandler
     with ThreadedTCPServer(("127.0.0.1", port), handler) as httpd:
         httpd.serve_forever()
 
@@ -440,7 +440,7 @@ def launch_desktop():
 
     app_url = f"http://127.0.0.1:{port}"
     print("=" * 65)
-    print("  >> LOCAL AI WORKBENCH v2.0 ACTIVE")
+    print("  >> COGNITO AI WORKBENCH v2.0 ACTIVE")
     print(f"  URL: {app_url}")
     print("  Status: Air-Gapped Industrial AI Workstation")
     print("=" * 65)
@@ -449,7 +449,7 @@ def launch_desktop():
     try:
         import webview
         window = webview.create_window(
-            "Local AI Workbench",
+            "Cognito AI",
             url=app_url,
             width=1480,
             height=920,
@@ -463,7 +463,7 @@ def launch_desktop():
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("Stopping Local AI Workbench.")
+            print("Stopping Cognito AI.")
 
     # 5. Final exit teardown
     stop_ollama_server()

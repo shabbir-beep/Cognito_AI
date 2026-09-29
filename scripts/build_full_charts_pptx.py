@@ -1,6 +1,6 @@
 """
 Build Complete SIH 2026 PowerPoint Presentation with Dedicated Chart/Graph Layouts
-Project: SIH26117 | MRPL Sovereign On-Premise Agentic AI Workbench
+Project: SIH26117 | MRPL Cognito On-Premise Agentic AI Workbench
 Format: Exact 16:9 Widescreen SIH Template with distinct visual containers,
 structured tables, wheel diagrams, stacked cylinder, flowcharts, and risk matrices.
 """
@@ -160,7 +160,7 @@ def build_presentation(output_path):
     p_t1.alignment = PP_ALIGN.CENTER
 
     p_t2 = tf_s1_t.add_paragraph()
-    p_t2.text = "SOVEREIGN ON-PREMISE\nAGENTIC AI WORKBENCH"
+    p_t2.text = "COGNITO ON-PREMISE\nAGENTIC AI WORKBENCH"
     p_t2.font.name = "Georgia"
     p_t2.font.size = Pt(17)
     p_t2.font.bold = True
@@ -176,12 +176,12 @@ def build_presentation(output_path):
 
     meta_bullets = [
         ("• Problem Statement ID: ", "SIH26117", True),
-        ("• Problem Statement Title: ", "Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
+        ("• Problem Statement Title: ", "Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
         ("• Organization: ", "Mangalore Refinery and Petrochemicals Limited (MRPL)", True),
         ("• Theme & Category: ", "Smart Automation  |  Software", False),
         ("• Team ID & Name: ", "[To be updated / Registered Team ID] — [Registered Team Name]", False),
         ("• Tech Stack: ", "Python 3.10-3.14 (Multithreaded Server), PyWebView SPA (HTML5/CSS3/JS), Standalone Embedded Ollama (Port 11434), ReportLab PDF, python-docx, openpyxl", False),
-        ("• Deployment: ", "Zero-Install Single-File Portable Windows Executable (SovereignAIWorkbench.exe, ~21MB) with self-contained data/ folder structure", False),
+        ("• Deployment: ", "Zero-Install Single-File Portable Windows Executable (CognitoAI.exe, ~21MB) with self-contained data/ folder structure", False),
     ]
 
     for idx, (label, val, highlight) in enumerate(meta_bullets):
@@ -241,7 +241,7 @@ def build_presentation(output_path):
     tf_nt = tx_note.text_frame
     tf_nt.word_wrap = True
     p_nt1 = tf_nt.paragraphs[0]
-    p_nt1.text = "• Auto-Scoring Formula: Memory (GB) = (Params * 0.65) + 0.8 GB\n• Zero-Install Binary: SovereignAIWorkbench.exe (20.87 MB)\n• Windows Job Object (0x2000): 0 MB leftover VRAM on exit"
+    p_nt1.text = "• Auto-Scoring Formula: Memory (GB) = (Params * 0.65) + 0.8 GB\n• Zero-Install Binary: CognitoAI.exe (20.87 MB)\n• Windows Job Object (0x2000): 0 MB leftover VRAM on exit"
     p_nt1.font.name = "Arial"
     p_nt1.font.size = Pt(8)
     p_nt1.font.color.rgb = C_SLATE_700
@@ -250,7 +250,7 @@ def build_presentation(output_path):
     # SLIDE 2: Problem & Proposed Solution + Wheel + Cylinder
     # =========================================================================
     s2 = prs.slides.add_slide(blank_layout)
-    add_common_header_footer(s2, "SOVEREIGN AI WORKBENCH", 2)
+    add_common_header_footer(s2, "COGNITO AI WORKBENCH", 2)
 
     # Left Column: Problem & Proposed Solution
     tx_p = s2.shapes.add_textbox(Inches(0.4), Inches(1.35), Inches(3.6), Inches(2.6))

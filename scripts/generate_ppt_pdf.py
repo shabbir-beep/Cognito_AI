@@ -1,6 +1,6 @@
 """
 Generate SIH 2026 Presentation PDF for Problem Statement SIH26117
-Sovereign On-Premise Agentic AI Workbench - MRPL
+Cognito On-Premise Agentic AI Workbench - MRPL
 """
 
 import os
@@ -44,7 +44,7 @@ class NumberedCanvas(canvas.Canvas):
         # Header text
         self.setFont("Helvetica-Bold", 10)
         self.setFillColor(colors.white)
-        self.drawString(36, 592, "SMART INDIA HACKATHON 2026  •  SOVEREIGN ON-PREMISE AGENTIC AI WORKBENCH")
+        self.drawString(36, 592, "SMART INDIA HACKATHON 2026  •  COGNITO ON-PREMISE AGENTIC AI WORKBENCH")
         
         self.setFont("Helvetica", 9)
         self.setFillColor(colors.HexColor("#cbd5e1"))
@@ -177,7 +177,7 @@ def build_presentation_pdf(output_path):
     # =========================================================================
     story.append(Spacer(1, 15))
     story.append(Paragraph("SMART INDIA HACKATHON 2026", ParagraphStyle('SIHHeader', fontName='Helvetica-Bold', fontSize=22, leading=26, textColor=colors.HexColor('#d97706'), alignment=1)))
-    story.append(Paragraph("SOVEREIGN ON-PREMISE AGENTIC AI WORKBENCH", ParagraphStyle('SIHSub', fontName='Helvetica-Bold', fontSize=16, leading=20, textColor=colors.HexColor('#0f172a'), alignment=1)))
+    story.append(Paragraph("COGNITO ON-PREMISE AGENTIC AI WORKBENCH", ParagraphStyle('SIHSub', fontName='Helvetica-Bold', fontSize=16, leading=20, textColor=colors.HexColor('#0f172a'), alignment=1)))
     story.append(Spacer(1, 15))
 
     info_data = [
@@ -187,7 +187,7 @@ def build_presentation_pdf(output_path):
         ],
         [
             Paragraph("<b>Problem Statement Title:</b>", body_bold),
-            Paragraph("Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", body_text)
+            Paragraph("Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", body_text)
         ],
         [
             Paragraph("<b>Organization:</b>", body_bold),
@@ -245,7 +245,7 @@ def build_presentation_pdf(output_path):
     # SLIDE 2: Problem & Proposed Solution
     # =========================================================================
     story.append(PageBreak())
-    story.append(Paragraph("SOVEREIGN AI WORKBENCH — PROBLEM & SOLUTION", title_style))
+    story.append(Paragraph("COGNITO AI WORKBENCH — PROBLEM & SOLUTION", title_style))
     story.append(Spacer(1, 4))
 
     col1 = [
@@ -257,7 +257,7 @@ def build_presentation_pdf(output_path):
         Spacer(1, 4),
         Paragraph("<b>THE PROPOSED SOLUTION</b>", ParagraphStyle('GreenTitle', fontName='Helvetica-Bold', fontSize=11, leading=14, textColor=colors.HexColor('#15803d'))),
         Spacer(1, 4),
-        Paragraph("• <b>100% Self-Hosted & Sovereign:</b> Fully offline desktop workstation running on refinery hardware with verifiable zero external network traffic.", body_text),
+        Paragraph("• <b>100% Self-Hosted & Cognito:</b> Fully offline desktop workstation running on refinery hardware with verifiable zero external network traffic.", body_text),
         Paragraph("• <b>Hardware-Aware Intelligence:</b> Auto-detects real CPU/RAM/VRAM and scores a 32-model catalog to run the best-fit model comfortably.", body_text),
         Paragraph("• <b>Multi-Format File Ingestion:</b> Native extraction from Word, Excel telemetry sheets, PDFs, and P&ID diagrams.", body_text),
         Paragraph("• <b>Automated Deliverable Dispatch:</b> One-click generation of signed executive approval notes in DOCX and PDF directly to Desktop.", body_text),
@@ -567,5 +567,5 @@ def build_presentation_pdf(output_path):
 
 if __name__ == '__main__':
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    out_pdf = os.path.join(root_dir, "SIH2026_SIH26117_Sovereign_AI_Workbench_Presentation.pdf")
+    out_pdf = os.path.join(root_dir, "SIH2026_SIH26117_Cognito_AI_Workbench_Presentation.pdf")
     build_presentation_pdf(out_pdf)

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Sovereign AI Workbench — Linux Launcher
+# Cognito AI — Linux Launcher
 # Mangalore Refinery and Petrochemicals Limited (MRPL) | SIH26117
 
 set -e
 
 echo "====================================================="
-echo "⚡ Starting Sovereign AI Workbench (Linux Air-Gapped)"
+echo "⚡ Starting Cognito AI (Linux Air-Gapped)"
 echo "====================================================="
 
 # Check Python 3

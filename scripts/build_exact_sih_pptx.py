@@ -1,6 +1,6 @@
 """
 Build Exact SIH 2026 Template PowerPoint Presentation for SIH26117
-Sovereign On-Premise Agentic AI Workbench (MRPL)
+Cognito On-Premise Agentic AI Workbench (MRPL)
 Matches the exact slide-by-slide layout, shapes, diagrams, oval badges,
 wheels, cylinders, and tables from the official Smart India Hackathon template.
 """
@@ -160,7 +160,7 @@ def build_sih_exact_presentation(output_path):
     p_t1.alignment = PP_ALIGN.CENTER
 
     p_t2 = tf_s1_t.add_paragraph()
-    p_t2.text = "SOVEREIGN ON-PREMISE\nAGENTIC AI WORKBENCH"
+    p_t2.text = "COGNITO ON-PREMISE\nAGENTIC AI WORKBENCH"
     p_t2.font.name = "Georgia"
     p_t2.font.size = Pt(16)
     p_t2.font.bold = True
@@ -176,7 +176,7 @@ def build_sih_exact_presentation(output_path):
 
     bullets = [
         ("• Problem Statement ID: ", "SIH26117", True),
-        ("• Problem Statement Title: ", "Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
+        ("• Problem Statement Title: ", "Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work", False),
         ("• Organization: ", "Mangalore Refinery and Petrochemicals Limited (MRPL)", True),
         ("• Theme: ", "Smart Automation", False),
         ("• PS Category: ", "Software", False),
@@ -221,7 +221,7 @@ def build_sih_exact_presentation(output_path):
     # SLIDE 2: Problem & Proposed Solution + Wheel + Cylinder
     # =========================================================================
     s2 = prs.slides.add_slide(blank_layout)
-    add_common_header_footer(s2, "SOVEREIGN AI WORKBENCH", 2)
+    add_common_header_footer(s2, "COGNITO AI WORKBENCH", 2)
 
     # Left Column: Problem & Proposed Solution
     tx_p = s2.shapes.add_textbox(Inches(0.4), Inches(1.5), Inches(3.6), Inches(2.6))

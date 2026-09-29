@@ -1,6 +1,6 @@
 # Smart India Hackathon 2026 — Slide-Wise Manual PPT Editing Guide
 **Problem Statement ID:** `SIH26117` | **Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
-**Project Title:** Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work  
+**Project Title:** Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work  
 
 ---
 
@@ -13,17 +13,17 @@ This document provides the exact text, diagrams, flowcharts, tables, and screens
 
 ### 1. Text Content to Fill In:
 * **Top Heading:** `SMART INDIA HACKATHON 2026`
-* **Sub-Heading:** `SOVEREIGN ON-PREMISE AGENTIC AI WORKBENCH`
+* **Sub-Heading:** `COGNITO ON-PREMISE AGENTIC AI WORKBENCH`
 * **Bullet Points (Left Side):**
   * `• Problem Statement ID: SIH26117`
-  * `• Problem Statement Title: Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work`
+  * `• Problem Statement Title: Cognito On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work`
   * `• Organization: Mangalore Refinery and Petrochemicals Limited (MRPL)`
   * `• Theme: Smart Automation`
   * `• PS Category: Software`
   * `• Team ID: [Your Registered Team ID]`
   * `• Team Name: [Your Registered Team Name]`
   * `• Tech Stack & Architecture: Python 3.10+ (Multithreaded Server), PyWebView SPA, Embedded Ollama Daemon (Port 11434), ReportLab PDF, python-docx, openpyxl`
-  * `• Deployment: Zero-Install Single-File Portable Windows Executable (SovereignAIWorkbench.exe, ~21MB) with portable data/ directory`
+  * `• Deployment: Zero-Install Single-File Portable Windows Executable (CognitoAI.exe, ~21MB) with portable data/ directory`
 
 ---
 
@@ -42,7 +42,7 @@ This document provides the exact text, diagrams, flowcharts, tables, and screens
 
 ### 3. 📸 Screenshot Slot for Slide 1:
 * **Placement:** Bottom-right corner or center-right.
-* **What to capture:** A clean screenshot of the **Sovereign AI Workbench Home Screen** showing the app banner, active model selector (`Qwen2.5-Coder` or `DeepSeek-R1`), and the hardware telemetry pill (`GPU: GT 710 / RTX | 100% Air-Gapped`).
+* **What to capture:** A clean screenshot of the **Cognito AI Home Screen** showing the app banner, active model selector (`Qwen2.5-Coder` or `DeepSeek-R1`), and the hardware telemetry pill (`GPU: GT 710 / RTX | 100% Air-Gapped`).
 
 ---
 
@@ -51,7 +51,7 @@ This document provides the exact text, diagrams, flowcharts, tables, and screens
 # 📌 SLIDE 2: Problem, Solution & Core Pillars
 
 ### 1. Text Content to Fill In:
-* **Top Header:** `SOVEREIGN AI WORKBENCH`
+* **Top Header:** `COGNITO AI WORKBENCH`
 * **THE PROBLEM (Top Left):**
   > *"Sensitive refinery telemetry across Hydrocracker Unit-4, FCCU, and Crude Distillation units, P&IDs, relief valve inspection notes (PSV-102A), and internal control scripts cannot leave premises. Commercial cloud assistants (ChatGPT, Claude) create severe data leakage risks, while manual SOP cross-referencing against 200+ page manuals causes multi-day clearance bottlenecks."*
   * **Pink Badge:** `Data Confidentiality Gap` $\rightarrow$ *Refinery telemetry, P&IDs & MAWP calculations cannot leave on-premise network.*

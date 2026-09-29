@@ -1,4 +1,4 @@
-# Sovereign AI Workbench — Complete Project Documentation
+# Cognito AI — Complete Project Documentation
 **Project Code:** SIH26117 | **Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
 **Version:** 2.0 (Portable Edition) | **Supported Platforms:** Windows 10/11 (64-bit), Linux
 
@@ -6,10 +6,10 @@
 
 ## 1. Executive Summary & Project Overview
 
-The **Sovereign AI Workbench** is a fully self-contained, air-gapped, portable desktop AI workstation designed for industrial, petrochemical, and enterprise environments. Built specifically for Mangalore Refinery and Petrochemicals Limited (MRPL), it allows non-technical operators and engineers to run state-of-the-art Large Language Models (LLMs) and Vision-Language Models locally without requiring an active internet connection, external cloud API keys, or administrative installation privileges.
+The **Cognito AI** is a fully self-contained, air-gapped, portable desktop AI workstation designed for industrial, petrochemical, and enterprise environments. Built specifically for Mangalore Refinery and Petrochemicals Limited (MRPL), it allows non-technical operators and engineers to run state-of-the-art Large Language Models (LLMs) and Vision-Language Models locally without requiring an active internet connection, external cloud API keys, or administrative installation privileges.
 
 ### Core Capabilities
-- **100% Air-Gapped & Sovereign:** Zero telemetry, cloud leakage, or external data transmission. All inferences, weights, logs, and sessions remain strictly on the local machine.
+- **100% Air-Gapped & Cognito:** Zero telemetry, cloud leakage, or external data transmission. All inferences, weights, logs, and sessions remain strictly on the local machine.
 - **Embedded Portable AI Engine:** Automatically manages, embeds, and runs a standalone local Ollama server instance with completely isolated model storage.
 - **Hardware-Aware Model Recommendation Engine:** Inspects real-time system hardware (CPU cores, RAM, free disk space, Nvidia GPU VRAM) and automatically scores and recommends the best model that comfortably fits the device.
 - **Integrated Model Hub:** One-click downloads with real-time progress bars and cancellation support across a curated catalog of 32 models (Coding, Reasoning/Math, SOP/General, Vision, Enterprise).
@@ -69,15 +69,15 @@ The application operates in a completely self-contained portable directory struc
 
 ```
 busy-lovelace/
-├── SovereignAIWorkbench.exe          # Compiled single-file portable Windows executable
+├── CognitoAI.exe          # Compiled single-file portable Windows executable
 ├── app_ui.html                       # Frontend SPA (HTML/CSS/JS, 5 themes, model hub)
 ├── main.py                           # Multithreaded HTTP server & desktop launcher
 ├── sovereign_engine.py               # Core inference, hardware detection, & engine logic
 ├── build_release_zip.py              # Packaging & release zip distribution builder
 ├── build_app_and_installer.py        # Alternative installer compilation script
 ├── setup_installer.py                # Standalone setup wizard script
-├── Run_Sovereign_AI_Workbench.bat    # Windows CMD launcher
-├── Install_Sovereign_AI_Workbench.bat# Windows Installer wizard launcher
+├── Run_Cognito_AI_Workbench.bat    # Windows CMD launcher
+├── Install_Cognito_AI_Workbench.bat# Windows Installer wizard launcher
 ├── run_linux.sh                      # Linux shell launcher
 ├── icon.ico / icon.png / favicon.ico # Application branding and icons
 ├── deliverables/                     # Output folder for generated inspection notes
@@ -238,22 +238,22 @@ python build_release_zip.py
 
 ### 6.2 Build Process Steps:
 1. **PyInstaller Compilation:**
-   - Bundles `main.py` into a single standalone binary: `dist/SovereignAIWorkbench.exe`.
+   - Bundles `main.py` into a single standalone binary: `dist/CognitoAI.exe`.
    - Embeds assets: `app_ui.html`, `sovereign_engine.py`, `icon.ico`, and `icon.png`.
    - Embeds multi-resolution icon (16px to 256px) for crisp desktop and taskbar display.
    - Strips heavy non-essential dependencies (`torch`, `scipy`, `numpy`, `matplotlib`, `cv2`, `tkinter`) to keep executable under 22 MB.
 2. **Distribution Assembly:**
-   - Creates `dist/SovereignAIWorkbench_Portable/` with pre-made `data/` directories (`models/`, `sessions/`, `settings/`, `ollama/`, `exports/`).
+   - Creates `dist/CognitoAI_Portable/` with pre-made `data/` directories (`models/`, `sessions/`, `settings/`, `ollama/`, `exports/`).
    - Copies clean `README.txt`.
 3. **Zip Archive:**
-   - Packages entire portable suite into `SovereignAIWorkbench_v2.0_Portable.zip` (~21 MB).
+   - Packages entire portable suite into `CognitoAI_v2.0_Portable.zip` (~21 MB).
 
 ---
 
 ## 7. Operational Instructions
 
 ### 7.1 Running the App
-- **Windows:** Double-click `SovereignAIWorkbench.exe` (or run `Run_Sovereign_AI_Workbench.bat`).
+- **Windows:** Double-click `CognitoAI.exe` (or run `Run_Cognito_AI_Workbench.bat`).
 - **Linux:** Run `bash run_linux.sh`.
 
 ### 7.2 First Launch Experience
