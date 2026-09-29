@@ -18,7 +18,8 @@ def run_command(cmd):
         sys.exit(res.returncode)
 
 def main():
-    root_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(root_dir)
     dist_dir = os.path.join(root_dir, 'dist')
     release_folder = os.path.join(dist_dir, 'CognitoAI_Portable')
     zip_path = os.path.join(root_dir, 'CognitoAI_v2.0_Portable.zip')
